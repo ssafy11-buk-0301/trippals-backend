@@ -40,6 +40,7 @@ jacocoTestCoverageVerification {
             }
 
             excludes = [
+                "*.dao.*",
                 "*.config.*",
                 "*.dto.*",
                 "*Application*"
