@@ -16,8 +16,13 @@ jacoco {
     toolVersion = '0.8.12'
 }
 
+tasks.register('jococoVerify', Test) {
+    exclude '**/dao/**'
+    useJUnitPlatform()
+}
+
 jacocoTestReport {
-    dependsOn test
+    dependsOn jococoVerify
     reports {
         html.required = true
         xml.required = true
@@ -75,11 +80,6 @@ dependencies {
 
     runtimeOnly 'com.h2database:h2'
     runtimeOnly 'com.mysql:mysql-connector-j'
-}
-
-task jococoVerify( type: Test ) {
-    exclude '**/dao/**'
-    useJUnitPlatform()
 }
 
 tasks.named('test') {
