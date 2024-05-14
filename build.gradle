@@ -14,21 +14,15 @@ java {
 
 jacoco {
     toolVersion = '0.8.12'
-}
-
-tasks.register('jococoVerify', Test) {
-    useJUnitPlatform {
-        excludeTags 'integration'
-    }
+    reportsDirectory = layout.projectDirectory.file("jacoco").asFile
 }
 
 jacocoTestReport {
-    dependsOn jococoVerify
+    dependsOn test
     reports {
-        html.required = true
+        html.required = false
         xml.required = true
     }
-
     finalizedBy jacocoTestCoverageVerification
 }
 
@@ -79,10 +73,17 @@ dependencies {
 
     implementation 'org.springdoc:springdoc-openapi-starter-webmvc-ui:2.5.0'
 
-    runtimeOnly 'com.h2database:h2'
+//    runtimeOnly 'com.h2database:h2'
     runtimeOnly 'com.mysql:mysql-connector-j'
 }
 
 tasks.named('test') {
     useJUnitPlatform()
+    finalizedBy jacocoTestReport
+}
+
+test {
+    jacoco {
+        destinationFile = layout.projectDirectory.file("jacoco/${name}.exec").asFile
+    }
 }
