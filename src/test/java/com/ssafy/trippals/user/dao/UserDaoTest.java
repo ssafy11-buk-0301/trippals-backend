@@ -4,6 +4,7 @@ import com.ssafy.trippals.user.dto.UserData;
 import com.ssafy.trippals.user.dto.UserInsert;
 import com.ssafy.trippals.user.dto.UserUpdate;
 import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Tag;
 import org.junit.jupiter.api.Test;
 import org.mybatis.spring.boot.test.autoconfigure.MybatisTest;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -14,10 +15,10 @@ import java.util.Optional;
 import java.util.UUID;
 import java.util.function.Function;
 import java.util.function.Predicate;
-import java.util.function.Supplier;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
+@Tag("integration")
 @MybatisTest
 @AutoConfigureTestDatabase(replace = AutoConfigureTestDatabase.Replace.NONE)
 class UserDaoTest {

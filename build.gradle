@@ -17,8 +17,9 @@ jacoco {
 }
 
 tasks.register('jococoVerify', Test) {
-    exclude '**/dao/**'
-    useJUnitPlatform()
+    useJUnitPlatform {
+        excludeTags 'integration'
+    }
 }
 
 jacocoTestReport {
