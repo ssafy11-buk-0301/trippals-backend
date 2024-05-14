@@ -77,6 +77,11 @@ dependencies {
     runtimeOnly 'com.mysql:mysql-connector-j'
 }
 
+task jococoVerify( type: Test ) {
+    exclude '**/dao/**'
+    useJUnitPlatform()
+}
+
 tasks.named('test') {
     useJUnitPlatform()
 }
