@@ -36,3 +36,6 @@ jobs:
     - name: Test with Gradle
       run: ./gradlew test
 
+    - name: Verify Coverage
+      run: ./gradlew jacocoTestReport
+
