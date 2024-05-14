@@ -1,0 +1,42 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<mapper xmlns="http://mybatis.org/schema/mybatis-mapper"
+        namespace="com.ssafy.trippals.user.dao.UserDao">
+
+    <!--  사용자를 email로 조회  -->
+    <select id="findUserDataByEmail"
+            resultType="=UserData">
+        select  *
+        from    users
+        where   email = #{email};
+    </select>
+
+    <!--  사용자를 키워드로 조회  -->
+    <select id="findUserDataByKeyword"
+            resultType="UserData">
+        select  *
+        from    users
+        where   email like #{keyword} + '%'
+                or  name like #{keyword} + '%';
+    </select>
+
+    <!--  사용자 생성  -->
+    <insert id="insertUser" parameterType="UserInsert"
+            useGeneratedKeys="true" keyProperty="seq">
+        insert  users (name, password, email, register_date)
+        values  (#{name}, #{password}, #{email}, now());
+    </insert>
+
+    <!--  사용자 업데이트  -->
+    <update id="updateUser" parameterType="UserUpdate">
+        update  users
+           set  name = #{name}
+           set  profile_image = #{profileImage}
+         where  seq = #{seq}
+    </update>
+
+    <!--  사용자 삭제  -->
+    <delete id="deleteUser">
+        delete  users
+         where  seq = #{seq};
+    </delete>
+</mapper>
