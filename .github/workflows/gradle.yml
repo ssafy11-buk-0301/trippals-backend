@@ -14,7 +14,7 @@ on:
     branches: [ "dev" ]
 
 jobs:
-  Build:
+  Test:
 
     runs-on: ubuntu-latest
     permissions:
@@ -28,9 +28,6 @@ jobs:
         java-version: '17'
         distribution: 'temurin'
 
-  Test:
-    runs-on: ubuntu-latest
-    steps:
     - name: Grant execute permission for gradlew
       run: chmod +x gradlew
 
