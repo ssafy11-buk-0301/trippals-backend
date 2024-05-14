@@ -16,24 +16,17 @@ jacoco {
     toolVersion = '0.8.12'
 }
 
+tasks.register('jococoVerify', Test) {
+    useJUnitPlatform {
+        excludeTags 'integration'
+    }
+}
+
 jacocoTestReport {
-    dependsOn test
+    dependsOn jococoVerify
     reports {
         html.required = true
         xml.required = true
-    }
-
-    afterEvaluate {
-        classDirectories.setFrom(
-            files(classDirectories.files.collect {
-              fileTree(dir: it, excludes: [
-                  "**/dao/**",
-                  "**/config/**",
-                  "**/dto/**",
-                  "**/*Application*"
-              ])
-            })
-        )
     }
 
     finalizedBy jacocoTestCoverageVerification
@@ -53,10 +46,10 @@ jacocoTestCoverageVerification {
             }
 
             excludes = [
-                "**/dao/**",
-                "**/config/**",
-                "**/dto/**",
-                "**/*Application"
+                "*.dao.*",
+                "*.config.*",
+                "*.dto.*",
+                "*Application*"
             ]
         }
     }
@@ -91,7 +84,5 @@ dependencies {
 }
 
 tasks.named('test') {
-    dependsOn clean
     useJUnitPlatform()
-    finalizedBy jacocoTestReport
 }
