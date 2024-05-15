@@ -12,5 +12,6 @@ public class RouteData {
     private Integer owner;
     private String name;
     private String overview;
+    private String thumbnail;
     private LocalDateTime startDate;
 }

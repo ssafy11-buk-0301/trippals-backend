@@ -3,9 +3,16 @@
 <mapper namespace="com.ssafy.trippals.route.dao.RouteDao">
     <!--  사용자가 소유한 Route 정보 조회  -->
     <select id="findRouteDataByOwner" resultType="RouteData">
-        select  seq, name, overview, thumbnail, start_date
+        select  seq, owner, name, overview, thumbnail, start_date
         from    route
         where   owner = #{owner};
+    </select>
+
+    <!--  seq로 Route 정보 조회  -->
+    <select id="findRouteDataBySeq" resultType="RouteData">
+        select  seq, owner, name, overview, thumbnail, start_date
+        from    route
+        where   seq = #{seq};
     </select>
 
     <!--  Route 생성  -->
@@ -22,11 +29,12 @@
                overview = #{overview},
                thumbnail = #{thumbnail},
                start_date = #{startDate}
-        where  seq = #{seq};
+        where  seq = #{seq}
+          and  owner = #{owner};
     </update>
 
     <!--  Route 삭제  -->
-    <delete id="deleteRoute">
+    <delete id="deleteRouteBySeq">
         delete from route
          where seq = #{seq};
     </delete>
