@@ -38,4 +38,27 @@
         delete from route
          where seq = #{seq};
     </delete>
+
+    <!--  여행 경로에 여행지 추가  -->
+    <insert id="insertAttractionIntoRoute" parameterType="RouteAttractionInsert">
+        insert  into route_attraction(route_seq, attraction_seq, order_number)
+        select  #{ routeSeq }, #{ attractionSeq }, max(order_number) + 1
+          from  route_attraction
+         where  route_seq = #{ routeSeq };
+    </insert>
+
+    <!-- 여행 경로에서 여행지 삭제 -->
+    <delete id="deleteAttractionFromRoute" parameterType="RouteAttractionDelete">
+        delete
+          from  route_attraction
+         where  route_seq = #{ routeSeq }
+           and  attraction_seq = #{ attractionSeq };
+    </delete>
+
+    <update id="updateRouteAttractionOrder" parameterType="RouteAttractionOrderUpdate">
+        update  route_attraction
+           set  order_number = #{ order }
+         where  route_seq = #{ routeSeq }
+           and  attraction_seq = #{ attractionSeq };
+    </update>
 </mapper>
