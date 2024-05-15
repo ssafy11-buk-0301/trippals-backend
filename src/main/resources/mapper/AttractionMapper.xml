@@ -3,7 +3,7 @@
 <mapper namespace="com.ssafy.trippals.attraction.dao.AttractionDao">
 
     <!--  여행 경로에 속한 여행지 조회  -->
-    <select id="findByRouteSeq" resultType="AttractionData">
+    <select id="findByRouteSeq" resultType="RouteAttractionData">
         select  ai.content_id       content_id,
                 content_type_id,
                 title,
@@ -11,7 +11,8 @@
                 addr1               addr,
                 first_image         image,
                 latitude,
-                longitude
+                longitude,
+                ra.order            order_number
 
         from    attraction_info ai, attraction_description ad, route_attraction ra
 
@@ -119,7 +120,7 @@
           and   ai.title like CONCAT('%', #{ keyword }, '%')
     </select>
 
-    <!--  축제 구군 코드로 조회  -->
+    <!--  여행 경로 주변 여행지 타입으로 조회  -->
     <select id="findNearbyAttractionsByContentType" parameterType="NearByAttractionContentTypeSelect"
             resultType="AttractionData">
         select  ai.content_id       content_id,
@@ -145,6 +146,24 @@
           and   ai.content_type_id = #{ contentType }
 
         limit   #{ offset }, #{ limit };
+    </select>
+
+    <!--  여행 경로 주변 여행지 타입으로 조회 개수 -->
+    <select id="countNearbyAttractionsByContentType" resultType="AttractionData">
+        select  count(ai.content_id)
+
+        from    attraction_info ai, attraction_description ad,
+                (
+                    select  distinct sido_code, gugun_code
+                    from  route_attraction ra, attraction_info ai2
+                    where  ra.route_seq = #{ routeSeq }
+                      and  ra.attraction_seq = ai2.content_id
+                ) area
+
+        where   ai.content_id = ad.content_id
+          and   ai.sido_code = area.sido_code
+          and   ai.gugun_code = area.gugun_code
+          and   ai.content_type_id = #{ contentType }
     </select>
 
 </mapper>

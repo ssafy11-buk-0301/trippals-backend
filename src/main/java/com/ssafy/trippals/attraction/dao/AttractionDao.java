@@ -7,7 +7,7 @@ import java.util.List;
 
 @Mapper
 public interface AttractionDao {
-    List<AttractionData> findByRouteSeq(int routeSeq);
+    List<RouteAttractionData> findByRouteSeq(int routeSeq);
 
     List<AttractionData> findByKeyword(AttractionKeywordSelect attractionKeywordSelect);
     List<AttractionData> findBySidoAndKeyword(AttractionSidoAndKeywordSelect attractionKeywordSelect);
@@ -18,4 +18,5 @@ public interface AttractionDao {
     int countByGugunAndKeyword(AttractionGugunAndKeywordSelect attractionKeywordSelect);
 
     List<AttractionData> findNearbyAttractionsByContentType(NearByAttractionContentTypeSelect attractionSelect);
+    List<AttractionData> countNearbyAttractionsByContentType(NearByAttractionContentTypeSelect attractionSelect);
 }
