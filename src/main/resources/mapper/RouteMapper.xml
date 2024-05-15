@@ -1,0 +1,33 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.ssafy.trippals.route.dao.RouteDao">
+    <!--  사용자가 소유한 Route 정보 조회  -->
+    <select id="findRouteDataByOwner" resultType="RouteData">
+        select  seq, name, overview, thumbnail, start_date
+        from    route
+        where   owner = #{owner};
+    </select>
+
+    <!--  Route 생성  -->
+    <insert id="insertRoute" parameterType="RouteInsert"
+            useGeneratedKeys="true" keyProperty="seq">
+        insert into route(owner, name, overview, thumbnail, start_date)
+        values ( #{owner}, #{name}, #{overview}, #{thumbnail}, #{startDate} );
+    </insert>
+
+    <!--  Route 업데이트  -->
+    <update id="updateRoute" parameterType="RouteUpdate">
+        update route
+           set name = #{name},
+               overview = #{overview},
+               thumbnail = #{thumbnail},
+               start_date = #{startDate}
+        where  seq = #{seq};
+    </update>
+
+    <!--  Route 삭제  -->
+    <delete id="deleteRoute">
+        delete from route
+         where seq = #{seq};
+    </delete>
+</mapper>

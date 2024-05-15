@@ -9,5 +9,6 @@
 
     <typeAliases>
         <package name="com.ssafy.trippals.user.dto"/>
+        <package name="com.ssafy.trippals.route.dto"/>
     </typeAliases>
 </configuration>
