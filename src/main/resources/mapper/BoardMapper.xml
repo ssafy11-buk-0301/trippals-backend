@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.ssafy.trippals.board.dao.BoardDao">
+    <!--  BoardParams(limit,offset,SearchWord)로 Select  -->
+    <select id="findBoardData" parameterType="BoardParams" resultType="BoardData">
+        select  seq, owner, name, overview, thumbnail, start_date
+        from    route
+        where   owner = #{owner};
+    </select>
+
+    <!--  Board 생성  -->
+    <insert id="insertBoard" parameterType="BoardInsert"
+            useGeneratedKeys="true" keyProperty="seq">
+        insert into board(user_seq, title, content, is_draft, route_seq)
+        values ( #{user_seq}, #{title}, #{content}, #{is_draft}, #{route_seq} );
+    </insert>
+
+    <!--  Board 삭제  -->
+    <delete id="deleteBoardBySeq">
+        delete from route
+        where seq = #{board_seq};
+    </delete>
+</mapper>
