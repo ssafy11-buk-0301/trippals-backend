@@ -28,8 +28,18 @@ jobs:
         java-version: '17'
         distribution: 'temurin'
 
-    - name: Grant execute permission for gradlew
+    - name: gradlew에 실행 권한 설정
       run: chmod +x gradlew
 
-    - name: Verify Coverage
+    - name: 커버리지 충족 검사
       run: ./gradlew jacocoTestCoverageVerification
+
+    - name: 테스트 커버리지를 PR에 코멘트로 등록
+      id: jacoco
+      uses: madrapps/jacoco-report@v1.2
+      with:
+        title: 📝 테스트 커버리지 리포트입니다
+        paths: ${{ github.workspace }}/jacoco/test/jacocoTestReport.xml
+        token: ${{ secrets.GITHUB_TOKEN }}
+        min-coverage-overall: 70
+        min-coverage-changed-files: 70
