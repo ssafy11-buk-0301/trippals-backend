@@ -42,7 +42,7 @@
     <!--  여행 경로에 여행지 추가  -->
     <insert id="insertAttractionIntoRoute" parameterType="RouteAttractionInsert">
         insert  into route_attraction(route_seq, attraction_seq, order_number)
-        select  #{ routeSeq }, #{ attractionSeq }, max(order_number) + 1
+        select  #{ routeSeq }, #{ attractionSeq }, IFNULL(MAX(order_number), 0) + 1
           from  route_attraction
          where  route_seq = #{ routeSeq };
     </insert>
