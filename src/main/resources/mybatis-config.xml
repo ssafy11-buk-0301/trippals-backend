@@ -11,5 +11,6 @@
         <package name="com.ssafy.trippals.user.dto"/>
         <package name="com.ssafy.trippals.route.dto"/>
         <package name="com.ssafy.trippals.attraction.dto"/>
+        <package name="com.ssafy.trippals.board.dto"/>
     </typeAliases>
 </configuration>
