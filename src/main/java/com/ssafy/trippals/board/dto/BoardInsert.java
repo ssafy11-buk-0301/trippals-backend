@@ -2,8 +2,6 @@ package com.ssafy.trippals.board.dto;
 
 import lombok.Data;
 
-import java.time.LocalDateTime;
-
 @Data
 public class BoardInsert {
     private Integer user_seq;
