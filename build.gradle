@@ -43,6 +43,7 @@ jacocoTestCoverageVerification {
                 "*.dao.*",
                 "*.config.*",
                 "*.dto.*",
+                "*.common.*",
                 "*Application*"
             ]
         }
