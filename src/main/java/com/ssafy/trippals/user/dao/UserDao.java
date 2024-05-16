@@ -15,6 +15,6 @@ public interface UserDao {
     List<UserData> findUserDataByKeyword(String keyword);
     int insertUser(UserInsert userInsert);
     int updateUser(UserUpdate userUpdate);
-    int updateUserPassword(@Param("seq") Integer seq, @Param("password") String password);
+    int updateUserPassword(@Param("email") String email, @Param("password") String password);
     int deleteUser(Integer seq);
 }

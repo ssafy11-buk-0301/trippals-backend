@@ -1,6 +1,7 @@
 package com.ssafy.trippals.user.controller;
 
 import com.ssafy.trippals.user.dto.SignUpForm;
+import com.ssafy.trippals.user.dto.SignUpInfo;
 import com.ssafy.trippals.user.dto.UserInfo;
 import com.ssafy.trippals.user.service.UserService;
 import lombok.RequiredArgsConstructor;
@@ -18,7 +19,6 @@ public class SignUpController {
     @PostMapping("/signUp")
     @ResponseStatus(HttpStatus.OK)
     public void signUp(@ModelAttribute SignUpForm signUpForm) {
-        UserInfo userInfo = new UserInfo(signUpForm.getName(), signUpForm.getEmail(), signUpForm.getPassword());
-        userService.signUp(userInfo);
+        userService.signUp(new SignUpInfo(signUpForm));
     }
 }

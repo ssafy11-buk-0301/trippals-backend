@@ -14,4 +14,10 @@ public class UserInsert {
         this.email = email;
         this.password = password;
     }
+
+    public UserInsert(SignUpInfo signUpInfo) {
+        this.name = signUpInfo.getName();
+        this.email = signUpInfo.getEmail();
+        this.password = signUpInfo.getPassword();
+    }
 }

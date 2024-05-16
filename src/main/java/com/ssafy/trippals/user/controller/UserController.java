@@ -70,7 +70,7 @@ public class UserController {
             throw new UserAuthException();
         }
 
-        userService.updateUserPassword(userInfo.getSeq(),
+        userService.updateUserPassword(userInfo.getEmail(),
                 userPasswordUpdateForm.getCurrentPassword(),
                 userPasswordUpdateForm.getNewPassword());
     }
