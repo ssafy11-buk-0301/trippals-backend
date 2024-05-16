@@ -14,4 +14,13 @@ public class RouteUpdate {
     private String overview;
     private String thumbnail;
     private LocalDateTime startDate;
+
+    public RouteUpdate(RouteInfo routeInfo) {
+        this.seq = routeInfo.getSeq();
+        this.owner = routeInfo.getOwner();
+        this.name = routeInfo.getName();
+        this.overview = routeInfo.getOverview();
+        this.thumbnail = routeInfo.getThumbnail();
+        this.startDate = routeInfo.getStartDate();
+    }
 }

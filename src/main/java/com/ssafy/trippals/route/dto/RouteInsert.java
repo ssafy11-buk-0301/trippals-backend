@@ -22,4 +22,12 @@ public class RouteInsert {
         this.thumbnail = thumbnail;
         this.startDate = startDate;
     }
+
+    public RouteInsert(RouteInsertInfo routeInsertInfo) {
+        this.owner = routeInsertInfo.getOwner();
+        this.name = routeInsertInfo.getName();
+        this.overview = routeInsertInfo.getOverview();
+        this.thumbnail = routeInsertInfo.getThumbnail();
+        this.startDate = routeInsertInfo.getStartDate();
+    }
 }
