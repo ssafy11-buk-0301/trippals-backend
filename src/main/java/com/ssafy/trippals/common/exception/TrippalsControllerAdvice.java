@@ -14,4 +14,16 @@ public class TrippalsControllerAdvice {
     public ErrorResult handleLoginException(LoginException ex) {
         return new ErrorResult(ErrorCode.LOGIN_FAIL, ex.getMessage());
     }
+
+    @ExceptionHandler(UserAuthException.class)
+    @ResponseStatus(HttpStatus.UNAUTHORIZED)
+    public ErrorResult handleUserAuthException(UserAuthException ex) {
+        return new ErrorResult(ErrorCode.UNAUTHORIZED, ex.getMessage());
+    }
+
+    @ExceptionHandler(UserNotFoundException.class)
+    @ResponseStatus(HttpStatus.BAD_REQUEST)
+    public ErrorResult handleUserNotFoundException(UserAuthException ex) {
+        return new ErrorResult(ErrorCode.USER_NOT_FOUND, ex.getMessage());
+    }
 }
