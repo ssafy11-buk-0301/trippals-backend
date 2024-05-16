@@ -6,4 +6,5 @@ import java.util.Optional;
 
 public interface UserService {
     Optional<UserInfo> login(String email, String password);
+    boolean signUp(UserInfo userInfo);
 }

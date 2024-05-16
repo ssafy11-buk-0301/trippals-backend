@@ -11,4 +11,10 @@ public class UserInfo {
     private String name;
     private String profileImageUri;
     private String email;
+
+    public UserInfo(String name, String profileImageUri, String email) {
+        this.name = name;
+        this.profileImageUri = profileImageUri;
+        this.email = email;
+    }
 }
