@@ -13,4 +13,12 @@ public class RouteInfoResponse {
     private String overview;
     private String thumbnail;
     private LocalDateTime startDate;
+
+    public RouteInfoResponse(RouteInfo routeInfo) {
+        this.seq = routeInfo.getSeq();
+        this.name = routeInfo.getName();
+        this.overview = routeInfo.getOverview();
+        this.thumbnail = routeInfo.getThumbnail();
+        this.startDate = routeInfo.getStartDate();
+    }
 }
