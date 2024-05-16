@@ -1,7 +1,12 @@
 spring:
   application.name: trippals
-  config:
-    import: classpath:config-datasource.yml
+#  config:
+#    import: classpath:config-datasource.yml
+  datasource:
+    driver-class-name: com.mysql.cj.jdbc.Driver
+    url: jdbc:mysql://localhost:3306/enjoytrips
+    username: root
+    password: 1234
 
 mybatis:
   mapper-locations: classpath:mapper/**/*.xml
