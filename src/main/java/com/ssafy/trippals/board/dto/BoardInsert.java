@@ -4,9 +4,9 @@ import lombok.Data;
 
 @Data
 public class BoardInsert {
-    private Integer user_seq;
+    private Integer userSeq;
     private String title;
     private String content;
-    private boolean is_draft;
-    private Integer route_seq;
+    private boolean isDraft;
+    private Integer routeSeq;
 }

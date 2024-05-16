@@ -2,6 +2,7 @@ package com.ssafy.trippals.board.dao;
 
 import com.ssafy.trippals.TrippalsApplication;
 import com.ssafy.trippals.board.dto.BoardData;
+import com.ssafy.trippals.board.dto.BoardInsert;
 import com.ssafy.trippals.board.dto.BoardParams;
 import org.junit.jupiter.api.Test;
 import org.mybatis.spring.boot.test.autoconfigure.MybatisTest;
@@ -28,6 +29,16 @@ public class BoardDaoTest {
 
         System.out.println(boardDataList);
         assertNotNull(boardDataList);
+    }
 
+    @Test
+    void insertBoard() {
+
+        BoardInsert boardInsert=new BoardInsert("testTitle","testContent","");
+
+        List<BoardData> boardDataList=boardDao.findBoardData(boardParams);
+
+        System.out.println(boardDataList);
+        assertNotNull(boardDataList);
     }
 }

@@ -4,14 +4,19 @@
     <!--  BoardParams(limit,offset,SearchWord)로 Select  -->
     <select id="findBoardData" parameterType="BoardParams" resultType="BoardData">
         select  b.seq, b.user_seq, b.title, b.content, b.reg_dt, b.read_count, b.is_draft, b.route_seq
-        from board b, users u
-        where b.user_seq = u.seq and is_draft=1
+        from board b
+        <where>
+            is_draft=1
+            <if test="searchWord != null and searchWord != ''">
+                AND column_name LIKE CONCAT('%', #{searchWord}, '%')
+            </if>
+        </where>
         order by b.reg_dt desc
             limit #{limit} offset #{offset}
     </select>
 
     <!--  Board 생성  -->
-    <insert id="insertBoard" parameterType="BoardInser">
+    <insert id="insertBoard" parameterType="BoardInsert">
         insert into board(user_seq, title, content, route_seq)
         values ( #{user_seq}, #{title}, #{content}, #{route_seq} );
         insert into board ( user_seq, title, content, reg_dt )
@@ -19,7 +24,7 @@
     </insert>
 
     <!--  Board 수정  -->
-    <update id="boardUpdate" parameterType="com.mycom.myboard.board.dto.BoardDto">
+    <update id="boardUpdate" parameterType="BoardInsert">
         update board
         set title = #{title},
             content   = #{content}
