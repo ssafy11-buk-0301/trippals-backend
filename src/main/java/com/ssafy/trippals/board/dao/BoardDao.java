@@ -10,6 +10,7 @@ import java.util.List;
 @Mapper
 public interface BoardDao {
     List<BoardData> findBoardData(BoardParams boardParams);
+    BoardData findBoardBySeq(Integer board_seq);
     int insertBoard(BoardInsert boardInsert);
     int updateboard(BoardInsert boardUpdate);
     int deleteBoard(Integer board_seq);
