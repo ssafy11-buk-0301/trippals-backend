@@ -10,5 +10,5 @@ public interface UserService {
     Optional<UserInfo> getUser(String email);
     Optional<UserInfo> updateUser(UserInfo userInfo);
     boolean verifyPassword(String email, String password);
-    boolean updateUserPassword(int seq, String currentPassword, String modifyPassword);
+    boolean updateUserPassword(int seq, String currentPassword, String newPassword);
 }

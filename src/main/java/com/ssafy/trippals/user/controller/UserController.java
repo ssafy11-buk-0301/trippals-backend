@@ -72,6 +72,6 @@ public class UserController {
 
         userService.updateUserPassword(userInfo.getSeq(),
                 userPasswordUpdateForm.getCurrentPassword(),
-                userPasswordUpdateForm.getModifyPassword());
+                userPasswordUpdateForm.getNewPassword());
     }
 }

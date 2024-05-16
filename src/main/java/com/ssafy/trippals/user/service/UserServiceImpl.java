@@ -34,7 +34,5 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
-    public boolean updateUserPassword(int seq, String currentPassword, String modifyPassword) {
-        return false;
-    }
+    public boolean updateUserPassword(int seq, String currentPassword, String newPassword) { return false; }
 }
