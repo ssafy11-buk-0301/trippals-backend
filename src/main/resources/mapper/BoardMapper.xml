@@ -11,17 +11,24 @@
     </select>
 
     <!--  Board 생성  -->
-    <insert id="insertBoard" parameterType="BoardInsert"
-            useGeneratedKeys="true" keyProperty="seq">
-        insert into board(user_seq, title, content, is_draft, route_seq)
-        values ( #{user_seq}, #{title}, #{content}, #{is_draft}, #{route_seq} );
-        insert into board ( user_seq, title, content, reg_dt, read_count )
-        values ( #{userSeq}, #{title}, #{content}, now(), 0 )
+    <insert id="insertBoard" parameterType="BoardInser">
+        insert into board(user_seq, title, content, route_seq)
+        values ( #{user_seq}, #{title}, #{content}, #{route_seq} );
+        insert into board ( user_seq, title, content, reg_dt )
+        values ( #{userSeq}, #{title}, #{content}, now())
     </insert>
+
+    <!--  Board 수정  -->
+    <update id="boardUpdate" parameterType="com.mycom.myboard.board.dto.BoardDto">
+        update board
+        set title = #{title},
+            content   = #{content}
+        where board_id = #{boardId} and user_seq=#{user_seq};
+    </update>
 
     <!--  Board 삭제  -->
     <delete id="deleteBoardBySeq">
         delete from route
-        where seq = #{board_seq};
+        where seq = #{board_seq} and user_seq=#{user_seq};
     </delete>
 </mapper>

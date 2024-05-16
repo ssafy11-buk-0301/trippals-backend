@@ -11,6 +11,6 @@ import java.util.List;
 public interface BoardDao {
     List<BoardData> findBoardData(BoardParams boardParams);
     int insertBoard(BoardInsert boardInsert);
-//    int updateboard(BoardUpdate boardUpdate);
+    int updateboard(BoardInsert boardUpdate);
     int deleteBoard(Integer board_seq);
 }
