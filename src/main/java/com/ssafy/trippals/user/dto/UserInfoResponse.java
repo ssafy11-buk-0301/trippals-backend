@@ -9,4 +9,11 @@ public class UserInfoResponse {
     private String name;
     private String profileImageUri;
     private String email;
+
+    public UserInfoResponse(UserInfo userInfo) {
+        this.seq = userInfo.getSeq();
+        this.name = userInfo.getName();
+        this.profileImageUri = userInfo.getProfileImageUri();
+        this.email = userInfo.getEmail();
+    }
 }

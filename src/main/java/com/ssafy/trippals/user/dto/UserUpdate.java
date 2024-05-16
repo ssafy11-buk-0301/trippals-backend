@@ -9,4 +9,10 @@ public class UserUpdate {
     private int seq;
     private String name;
     private String profileImage;
+
+    public UserUpdate(UserInfo userInfo) {
+        this.seq = userInfo.getSeq();
+        this.name = userInfo.getName();
+        this.profileImage = userInfo.getProfileImageUri();
+    }
 }

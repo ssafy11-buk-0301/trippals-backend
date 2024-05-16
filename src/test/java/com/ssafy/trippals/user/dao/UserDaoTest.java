@@ -107,7 +107,7 @@ class UserDaoTest {
         String expectedPassword = "modified";
 
         // when
-        int modifiedCount = userDao.updateUserPassword(target.getSeq(), expectedPassword);
+        int modifiedCount = userDao.updateUserPassword(target.getEmail(), expectedPassword);
         Optional<UserData> optionalUserData = userDao.findUserDataByEmail(target.getEmail());
 
         // then
