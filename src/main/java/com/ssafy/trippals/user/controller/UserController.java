@@ -1,6 +1,7 @@
 package com.ssafy.trippals.user.controller;
 
 import com.ssafy.trippals.SessionConst;
+import com.ssafy.trippals.common.exception.UserAuthException;
 import com.ssafy.trippals.common.exception.UserNotFoundException;
 import com.ssafy.trippals.user.dto.UserInfo;
 import com.ssafy.trippals.user.dto.UserInfoResponse;
@@ -21,14 +22,18 @@ public class UserController {
     private final UserService userService;
 
     @GetMapping
-    public ResponseEntity<UserInfoResponse> searchUser(String email) {
+    public ResponseEntity<UserInfoResponse> searchUser(@RequestParam("email") String email) {
         return ResponseEntity.ok(userService.getUser(email).map(UserInfoResponse::new).orElse(null));
     }
 
     @GetMapping("/{userSeq}")
     public ResponseEntity<UserInfoResponse> getUser(
-            @SessionAttribute(SessionConst.USER) UserInfo userInfo
+            @SessionAttribute(value = SessionConst.USER, required = false) UserInfo userInfo
     ) {
+        if (userInfo == null) {
+            throw new UserAuthException();
+        }
+
         return userService.getUser(userInfo.getEmail())
                 .map(UserInfoResponse::new)
                 .map(ResponseEntity::ok)
@@ -37,9 +42,13 @@ public class UserController {
 
     @PutMapping
     public ResponseEntity<UserInfoResponse> updateUser(
-            @SessionAttribute(SessionConst.USER) UserInfo userInfo,
+            @SessionAttribute(value = SessionConst.USER, required = false) UserInfo userInfo,
             @ModelAttribute UserUpdateForm userUpdateForm
     ) {
+        if (userInfo == null) {
+            throw new UserAuthException();
+        }
+
         UserInfo userInfoUpdate =
                 new UserInfo(userInfo.getSeq(), userUpdateForm.getName(), userUpdateForm.getProfileImage(), userInfo.getEmail());
 
@@ -54,9 +63,13 @@ public class UserController {
     @PutMapping("/password")
     @ResponseStatus(HttpStatus.OK)
     public void changePassword(
-            @SessionAttribute(SessionConst.USER) UserInfo userInfo,
+            @SessionAttribute(value = SessionConst.USER, required = false) UserInfo userInfo,
             @ModelAttribute UserPasswordUpdateForm userPasswordUpdateForm
     ) {
+        if (userInfo == null) {
+            throw new UserAuthException();
+        }
+
         userService.updateUserPassword(userInfo.getSeq(),
                 userPasswordUpdateForm.getCurrentPassword(),
                 userPasswordUpdateForm.getModifyPassword());

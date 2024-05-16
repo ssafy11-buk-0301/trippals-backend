@@ -23,7 +23,13 @@ public class TrippalsControllerAdvice {
 
     @ExceptionHandler(UserNotFoundException.class)
     @ResponseStatus(HttpStatus.BAD_REQUEST)
-    public ErrorResult handleUserNotFoundException(UserAuthException ex) {
+    public ErrorResult handleUserNotFoundException(UserNotFoundException ex) {
         return new ErrorResult(ErrorCode.USER_NOT_FOUND, ex.getMessage());
+    }
+
+    @ExceptionHandler(UserAlreadyExistsException.class)
+    @ResponseStatus(HttpStatus.BAD_REQUEST)
+    public ErrorResult handleUserAlreadyExistsException(UserAlreadyExistsException ex) {
+        return new ErrorResult(ErrorCode.USER_ALREADY_EXIST, ex.getMessage());
     }
 }
