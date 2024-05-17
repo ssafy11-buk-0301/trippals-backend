@@ -1,0 +1,49 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.ssafy.trippals.board.dao.BoardDao">
+    <!--  BoardParams(limit,offset,SearchWord)로 Select  -->
+    <select id="findBoardData" parameterType="BoardParams" resultType="BoardDto">
+        select  b.seq, b.user_seq, b.title, b.content, b.reg_dt, b.read_count, b.is_draft, b.route_seq
+        from board b,users u
+        where b.user_seq=u.seq and b.is_draft=1
+        order by #{orderBy} desc
+            limit #{limit} offset #{offset}
+    </select>
+
+    <select id="boardListCount" resultType="int">
+        SELECT COUNT(*) FROM board where is_draft=0
+    </select>
+
+    <select id="boardListSearchWordCount" parameterType="string" resultType="int">
+        select count(*)
+        from board
+        where title like concat('%', #{searchWord} ,'%') and is_draft=0
+    </select>
+
+
+    <select id="findBoardBySeq" parameterType="int" resultType="com.ssafy.trippals.board.dto.BoardDto">
+        select b.seq, b.user_seq,b.title, b.content, b.reg_dt, b.read_count, b.is_draft, b.route_seq
+        from board b
+        where b.seq = #{boardSeq}
+    </select>
+
+    <!--  Board 생성  -->
+    <insert id="insertBoard" parameterType="BoardDto">
+        insert into board(user_seq, title, content, route_seq,is_draft,reg_dt)
+        values ( #{userSeq}, #{title}, #{content}, #{routeSeq},#{isDraft},now());
+    </insert>
+
+    <!--  Board 수정  -->
+    <update id="updateBoard" parameterType="BoardDto">
+        update board
+        set title = #{title},
+            content   = #{content}
+        where seq = #{seq} and user_seq=#{userSeq};
+    </update>
+
+    <!--  Board 삭제  -->
+    <delete id="deleteBoardBySeq">
+        delete from board
+        where seq = #{boardSeq} and user_seq=#{userSeq};
+    </delete>
+</mapper>
