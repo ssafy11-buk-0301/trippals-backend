@@ -4,6 +4,7 @@ import com.ssafy.trippals.TrippalsApplication;
 import com.ssafy.trippals.board.dto.BoardData;
 import com.ssafy.trippals.board.dto.BoardInsert;
 import com.ssafy.trippals.board.dto.BoardParams;
+import com.ssafy.trippals.board.dto.BoardUpdate;
 import org.junit.jupiter.api.Test;
 import org.mybatis.spring.boot.test.autoconfigure.MybatisTest;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -21,6 +22,16 @@ public class BoardDaoTest {
     @Autowired private BoardDao boardDao;
 
     @Test
+    void boardListCount(){
+        assertNotNull(boardDao.boardListCount());
+    }
+
+    @Test
+    void boardListSearchWordCount(){
+        assertNotNull(boardDao.boardListSearchWordCount("제목"));
+    }
+
+    @Test
     void findBoardData() {
 
         BoardParams boardParams=new BoardParams(3,2,"");
@@ -32,13 +43,40 @@ public class BoardDaoTest {
     }
 
     @Test
+    void findBoardBySeq(){
+
+        BoardData boardData=boardDao.findBoardBySeq(1);
+
+        assertNotNull(boardData);
+    }
+    @Test
     void insertBoard() {
+        Integer routeSeq=1;
+        Integer userSeq=1;
+        Boolean isDraft=false;
+        BoardInsert boardInsert=new BoardInsert(userSeq,"testTitle","testContent",isDraft,routeSeq);
 
-        BoardInsert boardInsert=new BoardInsert("testTitle","testContent","");
+        Integer insertResult=boardDao.insertBoard(boardInsert);
 
-        List<BoardData> boardDataList=boardDao.findBoardData(boardParams);
+        assertNotNull(insertResult);
+    }
 
-        System.out.println(boardDataList);
-        assertNotNull(boardDataList);
+    @Test
+    void updateBoard(){
+        Integer boardSeq=1;
+        Integer routeSeq=1;
+        Integer userSeq=1;
+        Boolean isDraft=false;
+
+        BoardUpdate boardUpdate=new BoardUpdate(boardSeq,userSeq,"testTitle","testContent",isDraft,routeSeq);
+
+        Integer updateResult=boardDao.updateBoard(boardUpdate);
+
+        assertNotNull(updateResult);
+    }
+
+    @Test
+    void deleteBoard(){
+        assertNotNull(boardDao.deleteBoardBySeq(1,1));
     }
 }
