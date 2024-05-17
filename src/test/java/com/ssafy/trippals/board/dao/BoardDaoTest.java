@@ -1,16 +1,15 @@
 package com.ssafy.trippals.board.dao;
 
 import com.ssafy.trippals.TrippalsApplication;
-import com.ssafy.trippals.board.dto.BoardData;
-import com.ssafy.trippals.board.dto.BoardInsert;
+import com.ssafy.trippals.board.dto.BoardDto;
 import com.ssafy.trippals.board.dto.BoardParams;
-import com.ssafy.trippals.board.dto.BoardUpdate;
 import org.junit.jupiter.api.Test;
 import org.mybatis.spring.boot.test.autoconfigure.MybatisTest;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.jdbc.AutoConfigureTestDatabase;
 import org.springframework.test.context.ContextConfiguration;
 
+import java.time.LocalDateTime;
 import java.util.List;
 
 import static org.junit.jupiter.api.Assertions.assertNotNull;
@@ -34,29 +33,31 @@ public class BoardDaoTest {
     @Test
     void findBoardData() {
 
-        BoardParams boardParams=new BoardParams(3,2,"");
+        //orderBy String
+        BoardParams boardParams=new BoardParams(3,2,"","title");
 
-        List<BoardData> boardDataList=boardDao.findBoardData(boardParams);
+        List<BoardDto> boardDtoList =boardDao.findBoardData(boardParams);
 
-        System.out.println(boardDataList);
-        assertNotNull(boardDataList);
+        System.out.println(boardDtoList);
+        assertNotNull(boardDtoList);
     }
 
     @Test
     void findBoardBySeq(){
 
-        BoardData boardData=boardDao.findBoardBySeq(1);
+        BoardDto boardDto =boardDao.findBoardBySeq(1);
 
-        assertNotNull(boardData);
+        assertNotNull(boardDto);
     }
     @Test
     void insertBoard() {
+        Integer boardSeq=1;
         Integer routeSeq=1;
         Integer userSeq=1;
-        Boolean isDraft=false;
-        BoardInsert boardInsert=new BoardInsert(userSeq,"testTitle","testContent",isDraft,routeSeq);
+        boolean isDraft=false;
+        BoardDto boardDto=new BoardDto(boardSeq,userSeq,"testTitle","testContent",LocalDateTime.now(),isDraft,routeSeq);
 
-        Integer insertResult=boardDao.insertBoard(boardInsert);
+        Integer insertResult=boardDao.insertBoard(boardDto);
 
         assertNotNull(insertResult);
     }
@@ -66,11 +67,11 @@ public class BoardDaoTest {
         Integer boardSeq=1;
         Integer routeSeq=1;
         Integer userSeq=1;
-        Boolean isDraft=false;
+        boolean isDraft=false;
 
-        BoardUpdate boardUpdate=new BoardUpdate(boardSeq,userSeq,"testTitle","testContent",isDraft,routeSeq);
+        BoardDto boardDto =new BoardDto(boardSeq,userSeq,"testTitle","testContent",LocalDateTime.now(),isDraft,routeSeq);
 
-        Integer updateResult=boardDao.updateBoard(boardUpdate);
+        Integer updateResult=boardDao.updateBoard(boardDto);
 
         assertNotNull(updateResult);
     }
