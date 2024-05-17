@@ -4,36 +4,46 @@
     <!--  BoardParams(limit,offset,SearchWord)로 Select  -->
     <select id="findBoardData" parameterType="BoardParams" resultType="BoardData">
         select  b.seq, b.user_seq, b.title, b.content, b.reg_dt, b.read_count, b.is_draft, b.route_seq
-        from board b
-        <where>
-            is_draft=1
-            <if test="searchWord != null and searchWord != ''">
-                AND column_name LIKE CONCAT('%', #{searchWord}, '%')
-            </if>
-        </where>
-        order by b.reg_dt desc
+        from board b,user u
+        where b.user_seq=u.user_seq and b.is_draft=1
+        order by #{orderBy} desc
             limit #{limit} offset #{offset}
+    </select>
+
+    <select id="boardListCount" resultType="int">
+        SELECT COUNT(*) FROM board where is_draft=0
+    </select>
+
+    <select id="boardListSearchWordCount" parameterType="string" resultType="int">
+        select count(*)
+        from board
+        where title like concat('%', #{searchWord} ,'%') and is_draft=0
+    </select>
+
+
+    <select id="findBoardBySeq" parameterType="int" resultType="com.ssafy.trippals.board.dto.BoardData">
+        select b.seq, b.user_seq,b.title, b.content, b.reg_dt, b.read_count, b.is_draft, b.route_seq
+        from board b
+        where b.seq = #{boardSeq}
     </select>
 
     <!--  Board 생성  -->
     <insert id="insertBoard" parameterType="BoardInsert">
-        insert into board(user_seq, title, content, route_seq)
-        values ( #{user_seq}, #{title}, #{content}, #{route_seq} );
-        insert into board ( user_seq, title, content, reg_dt )
-        values ( #{userSeq}, #{title}, #{content}, now())
+        insert into board(user_seq, title, content, route_seq,reg_dt)
+        values ( #{userSeq}, #{title}, #{content}, #{routeSeq},now());
     </insert>
 
     <!--  Board 수정  -->
-    <update id="boardUpdate" parameterType="BoardInsert">
+    <update id="updateBoard" parameterType="BoardInsert">
         update board
         set title = #{title},
             content   = #{content}
-        where board_id = #{boardId} and user_seq=#{user_seq};
+        where seq = #{seq} and user_seq=#{userSeq};
     </update>
 
     <!--  Board 삭제  -->
     <delete id="deleteBoardBySeq">
-        delete from route
-        where seq = #{board_seq} and user_seq=#{user_seq};
+        delete from board
+        where seq = #{boardSeq} and user_seq=#{userSeq};
     </delete>
 </mapper>
