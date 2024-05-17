@@ -2,11 +2,13 @@ package com.ssafy.trippals.route.dto;
 
 import lombok.AllArgsConstructor;
 import lombok.Data;
+import lombok.NoArgsConstructor;
 
 import java.time.LocalDateTime;
 
 @Data
 @AllArgsConstructor
+@NoArgsConstructor
 public class RouteDto {
     private Integer seq;
     private Integer owner;

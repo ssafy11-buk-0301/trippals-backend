@@ -27,8 +27,7 @@ public class RouteServiceImpl implements RouteService {
 
     @Override
     public List<RouteDto> findUserRoutes(int owner) {
-        return routeDao.findRouteDtoByOwner(owner).stream()
-                .toList();
+        return routeDao.findRouteDtoByOwner(owner);
     }
 
     @Override
