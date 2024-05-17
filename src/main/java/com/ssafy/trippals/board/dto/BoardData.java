@@ -7,10 +7,10 @@ import java.time.LocalDateTime;
 @Data
 public class BoardData {
     private Integer seq;
-    private Integer user_seq;
+    private Integer userSeq;
     private String title;
     private String content;
     private LocalDateTime regDt;
-    private boolean is_draft;
-    private Integer route_seq;
+    private boolean isDraft;
+    private Integer routeSeq;
 }

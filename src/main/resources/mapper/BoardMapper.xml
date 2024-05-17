@@ -3,9 +3,11 @@
 <mapper namespace="com.ssafy.trippals.board.dao.BoardDao">
     <!--  BoardParams(limit,offset,SearchWord)로 Select  -->
     <select id="findBoardData" parameterType="BoardParams" resultType="BoardData">
-        select  seq, owner, name, overview, thumbnail, start_date
-        from    route
-        where   owner = #{owner};
+        select  b.seq, b.user_seq, b.title, b.content, b.reg_dt, b.read_count, b.is_draft, b.route_seq
+        from board b, users u
+        where b.user_seq = u.seq and is_draft=1
+        order by b.reg_dt desc
+            limit #{limit} offset #{offset}
     </select>
 
     <!--  Board 생성  -->
@@ -13,6 +15,8 @@
             useGeneratedKeys="true" keyProperty="seq">
         insert into board(user_seq, title, content, is_draft, route_seq)
         values ( #{user_seq}, #{title}, #{content}, #{is_draft}, #{route_seq} );
+        insert into board ( user_seq, title, content, reg_dt, read_count )
+        values ( #{userSeq}, #{title}, #{content}, now(), 0 )
     </insert>
 
     <!--  Board 삭제  -->
