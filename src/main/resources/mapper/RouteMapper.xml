@@ -2,28 +2,31 @@
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="com.ssafy.trippals.route.dao.RouteDao">
     <!--  사용자가 소유한 Route 정보 조회  -->
-    <select id="findRouteDataByOwner" resultType="RouteData">
+    <select id="findRouteDtoByOwner" resultType="RouteDto">
         select  seq, owner, name, overview, thumbnail, start_date
         from    route
         where   owner = #{owner};
     </select>
 
     <!--  seq로 Route 정보 조회  -->
-    <select id="findRouteDataBySeq" resultType="RouteData">
+    <select id="findRouteDtoBySeq" resultType="RouteDto">
         select  seq, owner, name, overview, thumbnail, start_date
         from    route
         where   seq = #{seq};
     </select>
 
+    <!--  여행지에서 여행   -->
+    <select id="findRouteAttractionDtoByRouteSeqAndContentId" resultType="RouteAttractionDto"></select>
+
     <!--  Route 생성  -->
-    <insert id="insertRoute" parameterType="RouteInsert"
+    <insert id="insertRoute" parameterType="RouteDto"
             useGeneratedKeys="true" keyProperty="seq">
         insert into route(owner, name, overview, thumbnail, start_date)
         values ( #{owner}, #{name}, #{overview}, #{thumbnail}, #{startDate} );
     </insert>
 
     <!--  Route 업데이트  -->
-    <update id="updateRoute" parameterType="RouteUpdate">
+    <update id="updateRoute" parameterType="RouteDto">
         update route
            set name = #{name},
                overview = #{overview},
@@ -40,7 +43,7 @@
     </delete>
 
     <!--  여행 경로에 여행지 추가  -->
-    <insert id="insertAttractionIntoRoute" parameterType="RouteAttractionInsert">
+    <insert id="insertAttractionIntoRoute">
         insert  into route_attraction(route_seq, attraction_seq, order_number)
         select  #{ routeSeq }, #{ attractionSeq }, IFNULL(MAX(order_number), 0) + 1
           from  route_attraction
@@ -48,14 +51,14 @@
     </insert>
 
     <!-- 여행 경로에서 여행지 삭제 -->
-    <delete id="deleteAttractionFromRoute" parameterType="RouteAttractionDelete">
+    <delete id="deleteAttractionFromRoute">
         delete
           from  route_attraction
          where  route_seq = #{ routeSeq }
            and  attraction_seq = #{ attractionSeq };
     </delete>
 
-    <update id="updateRouteAttractionOrder" parameterType="RouteAttractionOrderUpdate">
+    <update id="updateRouteAttractionOrder">
         update  route_attraction
            set  order_number = #{ order }
          where  route_seq = #{ routeSeq }

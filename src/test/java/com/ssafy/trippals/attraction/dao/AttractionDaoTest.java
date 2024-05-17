@@ -2,8 +2,7 @@ package com.ssafy.trippals.attraction.dao;
 
 import com.ssafy.trippals.attraction.dto.*;
 import com.ssafy.trippals.route.dao.RouteDao;
-import com.ssafy.trippals.route.dto.RouteAttractionInsert;
-import com.ssafy.trippals.route.dto.RouteInsert;
+import com.ssafy.trippals.route.dto.RouteDto;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.mybatis.spring.boot.test.autoconfigure.MybatisTest;
@@ -14,7 +13,6 @@ import java.time.LocalDateTime;
 import java.util.List;
 
 import static org.assertj.core.api.Assertions.assertThat;
-import static org.junit.jupiter.api.Assertions.*;
 
 @MybatisTest
 @AutoConfigureTestDatabase(replace = AutoConfigureTestDatabase.Replace.NONE)
@@ -22,7 +20,7 @@ class AttractionDaoTest {
     @Autowired AttractionDao attractionDao;
     @Autowired RouteDao routeDao;
 
-    static RouteInsert routeInsert = new RouteInsert(1, "route1", "overview1", "thumbnail1", LocalDateTime.now());
+    static RouteDto routeInsert = new RouteDto(1, "route1", "overview1", "thumbnail1", LocalDateTime.now());
 
     static List<Integer> attractionInsertList = List.of(
             125266, 125405, 125406, 125407, 125408, 125409, 125410, 125411, 125412, 125413
@@ -31,10 +29,7 @@ class AttractionDaoTest {
     @BeforeEach
     void setUp() {
         routeDao.insertRoute(routeInsert);
-        List<RouteAttractionInsert> insertList = attractionInsertList.stream()
-                .map(id -> new RouteAttractionInsert(routeInsert.getSeq(), id))
-                .toList();
-        insertList.forEach(routeDao::insertAttractionIntoRoute);
+        attractionInsertList.forEach(contentId -> routeDao.insertAttractionIntoRoute(routeInsert.getSeq(), contentId));
     }
 
     @Test
@@ -44,7 +39,7 @@ class AttractionDaoTest {
         AttractionKeywordSelect attractionKeywordSelect = new AttractionKeywordSelect(0, 10, expected);
 
         // when
-        List<AttractionData> actual = attractionDao.findByKeyword(attractionKeywordSelect);
+        List<AttractionDto> actual = attractionDao.findByKeyword(attractionKeywordSelect);
 
         // then
         assertThat(actual).isNotEmpty();
@@ -59,7 +54,7 @@ class AttractionDaoTest {
         AttractionSidoAndKeywordSelect attractionSidoAndKeywordSelect = new AttractionSidoAndKeywordSelect(0, 10, sidocode, keyword);
 
         // when
-        List<AttractionData> actual = attractionDao.findBySidoAndKeyword(attractionSidoAndKeywordSelect);
+        List<AttractionDto> actual = attractionDao.findBySidoAndKeyword(attractionSidoAndKeywordSelect);
 
         // then
         assertThat(actual).isNotEmpty();
@@ -75,7 +70,7 @@ class AttractionDaoTest {
         AttractionGugunAndKeywordSelect attractionGugunAndKeywordSelect = new AttractionGugunAndKeywordSelect(0, 10, sidocode, guguncode, keyword);
 
         // when
-        List<AttractionData> actual = attractionDao.findByGugunAndKeyword(attractionGugunAndKeywordSelect);
+        List<AttractionDto> actual = attractionDao.findByGugunAndKeyword(attractionGugunAndKeywordSelect);
 
         // then
         assertThat(actual).isNotEmpty();
@@ -86,10 +81,10 @@ class AttractionDaoTest {
     void findNearbyAttractionsByContentType() {
         // given
         ContentType expected = ContentType.FESTIVAL;
-        NearByAttractionContentTypeSelect contentTypeSelect = new NearByAttractionContentTypeSelect(0, 10, 1, expected);
+        NearByAttractionContentTypeSelect contentTypeSelect = new NearByAttractionContentTypeSelect(0, 10, 1, expected.getCode());
 
         // when
-        List<AttractionData> actual = attractionDao.findNearbyAttractionsByContentType(contentTypeSelect);
+        List<AttractionDto> actual = attractionDao.findNearbyAttractionsByContentType(contentTypeSelect);
 
         // then
         assertThat(actual).isNotEmpty();

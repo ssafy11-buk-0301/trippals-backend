@@ -7,7 +7,7 @@ import java.math.BigDecimal;
 
 @Data
 @AllArgsConstructor
-public class AttractionData {
+public class RouteAttractionDto {
     private Integer contentId;
     private Integer contentTypeId;
     private String title;
@@ -16,4 +16,6 @@ public class AttractionData {
     private String image;
     private BigDecimal latitude;
     private BigDecimal longitude;
+
+    private Integer orderNumber;
 }

@@ -32,4 +32,10 @@ public class TrippalsControllerAdvice {
     public ErrorResult handleUserAlreadyExistsException(UserAlreadyExistsException ex) {
         return new ErrorResult(ErrorCode.USER_ALREADY_EXIST, ex.getMessage());
     }
+
+    @ExceptionHandler(RouteLimitExceededException.class)
+    @ResponseStatus(HttpStatus.BAD_REQUEST)
+    public ErrorResult handleRouteLimitExceededException(RouteLimitExceededException ex) {
+        return new ErrorResult(ErrorCode.ROUTE_LIMIT_EXCEEDED, ex.getMessage());
+    }
 }

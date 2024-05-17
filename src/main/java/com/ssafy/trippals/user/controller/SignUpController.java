@@ -1,8 +1,7 @@
 package com.ssafy.trippals.user.controller;
 
 import com.ssafy.trippals.user.dto.SignUpForm;
-import com.ssafy.trippals.user.dto.SignUpInfo;
-import com.ssafy.trippals.user.dto.UserInfo;
+import com.ssafy.trippals.user.dto.UserDto;
 import com.ssafy.trippals.user.service.UserService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
@@ -19,6 +18,6 @@ public class SignUpController {
     @PostMapping("/signUp")
     @ResponseStatus(HttpStatus.OK)
     public void signUp(@ModelAttribute SignUpForm signUpForm) {
-        userService.signUp(new SignUpInfo(signUpForm));
+        userService.signUp(new UserDto(signUpForm));
     }
 }

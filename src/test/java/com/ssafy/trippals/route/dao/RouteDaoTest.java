@@ -1,8 +1,8 @@
 package com.ssafy.trippals.route.dao;
 
 import com.ssafy.trippals.attraction.dao.AttractionDao;
-import com.ssafy.trippals.attraction.dto.RouteAttractionData;
-import com.ssafy.trippals.route.dto.*;
+import com.ssafy.trippals.attraction.dto.RouteAttractionDto;
+import com.ssafy.trippals.route.dto.RouteDto;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.mybatis.spring.boot.test.autoconfigure.MybatisTest;
@@ -23,17 +23,17 @@ class RouteDaoTest {
     @Autowired RouteDao routeDao;
     @Autowired AttractionDao attractionDao;
 
-    static List<RouteInsert> routeInsertList = List.of(
-            new RouteInsert(1, "route1", "overview1", "thumbnail1", LocalDateTime.now()),
-            new RouteInsert(1, "route2", "overview2", "thumbnail2", LocalDateTime.now()),
-            new RouteInsert(1, "route3", "overview3", "thumbnail3", LocalDateTime.now()),
-            new RouteInsert(1, "route4", "overview4", "thumbnail4", LocalDateTime.now()),
-            new RouteInsert(2, "route5", "overview5", "thumbnail5", LocalDateTime.now()),
-            new RouteInsert(2, "route6", "overview6", "thumbnail6", LocalDateTime.now()),
-            new RouteInsert(3, "route7", "overview7", "thumbnail7", LocalDateTime.now()),
-            new RouteInsert(3, "route8", "overview8", "thumbnail8", LocalDateTime.now()),
-            new RouteInsert(3, "route9", "overview9", "thumbnail9", LocalDateTime.now()),
-            new RouteInsert(3, "route10", "overview10", "thumbnail10", LocalDateTime.now())
+    static List<RouteDto> routeInsertList = List.of(
+            new RouteDto(1, "route1", "overview1", "thumbnail1", LocalDateTime.now()),
+            new RouteDto(1, "route2", "overview2", "thumbnail2", LocalDateTime.now()),
+            new RouteDto(1, "route3", "overview3", "thumbnail3", LocalDateTime.now()),
+            new RouteDto(1, "route4", "overview4", "thumbnail4", LocalDateTime.now()),
+            new RouteDto(2, "route5", "overview5", "thumbnail5", LocalDateTime.now()),
+            new RouteDto(2, "route6", "overview6", "thumbnail6", LocalDateTime.now()),
+            new RouteDto(3, "route7", "overview7", "thumbnail7", LocalDateTime.now()),
+            new RouteDto(3, "route8", "overview8", "thumbnail8", LocalDateTime.now()),
+            new RouteDto(3, "route9", "overview9", "thumbnail9", LocalDateTime.now()),
+            new RouteDto(3, "route10", "overview10", "thumbnail10", LocalDateTime.now())
     );
 
     static List<Integer> attractionInsertList = List.of(
@@ -46,32 +46,32 @@ class RouteDaoTest {
     }
 
     @Test
-    void findRouteDataByOwner() {
+    void findRouteDtoByOwner() {
         // given
         int expectedOwner = 1;
 
         // when
-        List<RouteData> actualRouteDataList = routeDao.findRouteDataByOwner(expectedOwner);
+        List<RouteDto> actualRouteDtoList = routeDao.findRouteDtoByOwner(expectedOwner);
 
         // then
-        assertThat(actualRouteDataList).allMatch(data -> data.getOwner() == expectedOwner);
+        assertThat(actualRouteDtoList).allMatch(data -> data.getOwner() == expectedOwner);
     }
 
     @Test
     void updateRoute() {
         // given
-        RouteInsert target = routeInsertList.get(0);
-        RouteUpdate routeUpdate = new RouteUpdate(target.getSeq(), target.getOwner(),
+        RouteDto target = routeInsertList.get(0);
+        RouteDto routeUpdate = new RouteDto(target.getSeq(), target.getOwner(),
                 "modifiedName", "modifiedOverview", "modifiedThumbnail", LocalDate.now().atStartOfDay());
 
         // when
         int modifiedCount = routeDao.updateRoute(routeUpdate);
-        Optional<RouteData> actual = routeDao.findRouteDataBySeq(target.getSeq());
+        Optional<RouteDto> actual = routeDao.findRouteDtoBySeq(target.getSeq());
 
         // then
         assertThat(modifiedCount).isEqualTo(1);
         assertThat(actual.isPresent()).isTrue();
-        RouteData routeData = actual.get();
+        RouteDto routeData = actual.get();
 
         assertThat(routeData.getName()).isEqualTo(routeUpdate.getName());
         assertThat(routeData.getOverview()).isEqualTo(routeUpdate.getOverview());
@@ -82,80 +82,65 @@ class RouteDaoTest {
     @Test
     void deleteRouteBySeq() {
         // given
-        RouteInsert target = routeInsertList.get(0);
+        RouteDto target = routeInsertList.get(0);
 
         // when
         int modifiedCount = routeDao.deleteRouteBySeq(target.getSeq());
 
         // then
         assertThat(modifiedCount).isEqualTo(1);
-        assertThat(routeDao.findRouteDataBySeq(target.getSeq()).isEmpty()).isTrue();
+        assertThat(routeDao.findRouteDtoBySeq(target.getSeq()).isEmpty()).isTrue();
     }
 
     @Test
     void insertAttractionIntoRoute() {
         // given
-        RouteInsert target = routeInsertList.get(0);
-        List<RouteAttractionInsert> insertList = attractionInsertList.stream()
-                .map(id -> new RouteAttractionInsert(target.getSeq(), id))
-                .toList();
+        RouteDto target = routeInsertList.get(0);
 
         // when
-        insertList.forEach(routeDao::insertAttractionIntoRoute);
+        attractionInsertList.forEach(contentId -> routeDao.insertAttractionIntoRoute(target.getSeq(), contentId));
 
         // then
-        List<RouteAttractionData> actual = attractionDao.findByRouteSeq(target.getSeq());
-        assertThat(actual).hasSize(insertList.size());
+        List<RouteAttractionDto> actual = attractionDao.findByRouteSeq(target.getSeq());
+        assertThat(actual).hasSize(attractionInsertList.size());
         assertThat(actual).allMatch(a -> attractionInsertList.contains(a.getContentId()));
     }
 
     @Test
     void deleteAttractionFromRoute() {
         // given
-        RouteInsert targetRoute = routeInsertList.get(0);
-        List<RouteAttractionInsert> insertList = attractionInsertList.stream()
-                .map(id -> new RouteAttractionInsert(targetRoute.getSeq(), id))
-                .toList();
+        RouteDto targetRoute = routeInsertList.get(0);
         Integer targetAttraction = attractionInsertList.get(0);
 
-        insertList.forEach(routeDao::insertAttractionIntoRoute);
-        RouteAttractionDelete routeAttractionDelete = new RouteAttractionDelete(targetRoute.getSeq(), targetAttraction);
+        attractionInsertList.forEach(contentId -> routeDao.insertAttractionIntoRoute(targetRoute.getSeq(), contentId));
 
         // when
-        routeDao.deleteAttractionFromRoute(routeAttractionDelete);
+        routeDao.deleteAttractionFromRoute(targetRoute.getSeq(), targetAttraction);
 
         // then
-        List<RouteAttractionData> actual = attractionDao.findByRouteSeq(targetRoute.getSeq());
-        assertThat(actual).hasSize(insertList.size()-1);
+        List<RouteAttractionDto> actual = attractionDao.findByRouteSeq(targetRoute.getSeq());
+        assertThat(actual).hasSize(attractionInsertList.size()-1);
         assertThat(actual).noneMatch(a -> Objects.equals(a.getContentId(), targetAttraction));
     }
 
     @Test
     void updateRouteAttractionOrder() {
         // given
-        RouteInsert target = routeInsertList.get(0);
-        List<RouteAttractionInsert> insertList = attractionInsertList.stream()
-                .map(id -> new RouteAttractionInsert(target.getSeq(), id))
-                .toList();
-        insertList.forEach(routeDao::insertAttractionIntoRoute);
+        RouteDto target = routeInsertList.get(0);
+        attractionInsertList.forEach(contentId -> routeDao.insertAttractionIntoRoute(target.getSeq(), contentId));
 
-        List<RouteAttractionData> before = attractionDao.findByRouteSeq(target.getSeq());
-        RouteAttractionData attraction1 = before.get(0);
-        RouteAttractionData attraction2 = before.get(1);
-
-        RouteAttractionOrderUpdate orderUpdate1 =
-                new RouteAttractionOrderUpdate(target.getSeq(), attraction1.getContentId(), attraction2.getOrderNumber());
-        RouteAttractionOrderUpdate orderUpdate2 =
-                new RouteAttractionOrderUpdate(target.getSeq(), attraction2.getContentId(), attraction1.getOrderNumber());
+        List<RouteAttractionDto> before = attractionDao.findByRouteSeq(target.getSeq());
+        RouteAttractionDto attraction1 = before.get(0);
+        RouteAttractionDto attraction2 = before.get(1);
 
         // when
-        routeDao.updateRouteAttractionOrder(orderUpdate1);
-        routeDao.updateRouteAttractionOrder(orderUpdate2);
+        routeDao.updateRouteAttractionOrder(target.getSeq(), attraction1.getContentId(), attraction2.getOrderNumber());
+        routeDao.updateRouteAttractionOrder(target.getSeq(), attraction2.getContentId(), attraction1.getOrderNumber());
 
         // then
-        List<RouteAttractionData> after = attractionDao.findByRouteSeq(target.getSeq());
-        RouteAttractionData actual1 = after.get(0);
-        RouteAttractionData actual2 = after.get(1);
+        List<RouteAttractionDto> after = attractionDao.findByRouteSeq(target.getSeq());
+        RouteAttractionDto actual1 = after.get(0);
+        RouteAttractionDto actual2 = after.get(1);
 
         assertThat(actual1.getContentId()).isEqualTo(attraction2.getContentId());
         assertThat(actual2.getContentId()).isEqualTo(attraction1.getContentId());

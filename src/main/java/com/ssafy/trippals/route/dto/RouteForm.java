@@ -7,7 +7,7 @@ import java.time.LocalDateTime;
 
 @Data
 @AllArgsConstructor
-public class RouteInsertForm {
+public class RouteForm {
     private String name;
     private String overview;
     private String thumbnail;

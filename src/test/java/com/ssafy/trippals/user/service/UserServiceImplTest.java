@@ -1,9 +1,8 @@
 package com.ssafy.trippals.user.service;
 
 import com.ssafy.trippals.user.dao.UserDao;
-import com.ssafy.trippals.user.dto.SignUpInfo;
-import com.ssafy.trippals.user.dto.UserData;
-import com.ssafy.trippals.user.dto.UserInfo;
+import com.ssafy.trippals.user.dto.SignUpForm;
+import com.ssafy.trippals.user.dto.UserDto;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
@@ -14,7 +13,6 @@ import java.util.Optional;
 
 import static java.time.LocalDate.now;
 import static org.assertj.core.api.Assertions.assertThat;
-import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.when;
 
@@ -31,20 +29,20 @@ class UserServiceImplTest {
         String email = "test";
         String password = "test";
         when(userDao.findUserDataByEmail(any()))
-                .thenReturn(Optional.of(new UserData(1, "test", "test", "test", "test", now())));
+                .thenReturn(Optional.of(new UserDto(1, "test", "test", "test", "test", now())));
 
         // when
-        Optional<UserInfo> optionalUserInfo = userService.login(email, password);
+        Optional<UserDto> optionalUserDto = userService.login(email, password);
 
         // then
-        assertThat(optionalUserInfo.isPresent()).isTrue();
-        assertThat(optionalUserInfo.get().getEmail()).isEqualTo(email);
+        assertThat(optionalUserDto.isPresent()).isTrue();
+        assertThat(optionalUserDto.get().getEmail()).isEqualTo(email);
     }
 
     @Test
     void signUp() {
         // given
-        SignUpInfo signUpInfo = new SignUpInfo("test", "test", "test");
+        UserDto signUpInfo = new UserDto(new SignUpForm("test", "test", "test"));
         when(userDao.findUserDataByEmail(any())).thenReturn(Optional.empty());
         when(userDao.insertUser(any())).thenReturn(1);
 
@@ -60,41 +58,40 @@ class UserServiceImplTest {
         // given
         String email = "test";
         when(userDao.findUserDataByEmail(any()))
-                .thenReturn(Optional.of(new UserData(1, "test", "test", email, "test", now())));
+                .thenReturn(Optional.of(new UserDto(1, "test", "test", email, "test", now())));
 
         // when
-        Optional<UserInfo> optionalUserInfo = userService.getUser(email);
+        Optional<UserDto> optionalUserDto = userService.getUser(email);
 
         // then
-        assertThat(optionalUserInfo.isPresent()).isTrue();
-        assertThat(optionalUserInfo.get().getEmail()).isEqualTo(email);
+        assertThat(optionalUserDto.isPresent()).isTrue();
+        assertThat(optionalUserDto.get().getEmail()).isEqualTo(email);
     }
 
     @Test
     void updateUser() {
         // given
-        UserData userData = new UserData(1, "test", "test", "test", "test", now());
-        UserInfo userInfo = new UserInfo(userData);
+        UserDto userDto = new UserDto(1, "test", "test", "test", "test", now());
         when(userDao.findUserDataByEmail(any()))
-                .thenReturn(Optional.of(userData));
+                .thenReturn(Optional.of(userDto));
 
         // when
-        Optional<UserInfo> actual = userService.updateUser(userInfo);
+        Optional<UserDto> actual = userService.updateUser(userDto);
 
         // then
         assertThat(actual.isPresent()).isTrue();
-        assertThat(actual.get().getEmail()).isEqualTo(userData.getEmail());
+        assertThat(actual.get().getEmail()).isEqualTo(userDto.getEmail());
     }
 
     @Test
     void verifyPassword() {
         // given
-        UserData userData = new UserData(1, "test", "test", "test", "test", now());
+        UserDto userDto = new UserDto(1, "test", "test", "test", "test", now());
         when(userDao.findUserDataByEmail(any()))
-                .thenReturn(Optional.of(userData));
+                .thenReturn(Optional.of(userDto));
 
         // when
-        boolean result = userService.verifyPassword(userData.getEmail(), "test");
+        boolean result = userService.verifyPassword(userDto.getEmail(), "test");
 
         // then
         assertThat(result).isTrue();
@@ -103,13 +100,13 @@ class UserServiceImplTest {
     @Test
     void updateUserPassword() {
         // given
-        UserData userData = new UserData(1, "test", "test", "test", "test", now());
+        UserDto userDto = new UserDto(1, "test", "test", "test", "test", now());
         when(userDao.findUserDataByEmail(any()))
-                .thenReturn(Optional.of(userData));
+                .thenReturn(Optional.of(userDto));
         when(userDao.updateUserPassword(any(), any())).thenReturn(1);
 
         // when
-        boolean result = userService.updateUserPassword(userData.getEmail(), "test", "test");
+        boolean result = userService.updateUserPassword(userDto.getEmail(), "test", "test");
 
         // then
         assertThat(result).isTrue();

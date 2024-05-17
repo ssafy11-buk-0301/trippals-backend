@@ -3,7 +3,7 @@
 <mapper namespace="com.ssafy.trippals.attraction.dao.AttractionDao">
 
     <!--  여행 경로에 속한 여행지 조회  -->
-    <select id="findByRouteSeq" resultType="RouteAttractionData">
+    <select id="findByRouteSeq" resultType="RouteAttractionDto">
         select  ai.content_id       content_id,
                 content_type_id,
                 title,
@@ -25,7 +25,7 @@
 
     <!--  여행지 키워드로 검색  -->
     <select id="findByKeyword" parameterType="AttractionKeywordSelect"
-            resultType="AttractionData">
+            resultType="AttractionDto">
         select  ai.content_id       content_id,
                 content_type_id,
                 title,
@@ -46,7 +46,7 @@
 
     <!--  여행지 시도 코드와 키워드로 검색  -->
     <select id="findBySidoAndKeyword" parameterType="AttractionSidoAndKeywordSelect"
-            resultType="AttractionData">
+            resultType="AttractionDto">
         select  ai.content_id       content_id,
                 content_type_id,
                 title,
@@ -68,7 +68,7 @@
 
     <!--  여행지 구군 코드와 키워드로 검색  -->
     <select id="findByGugunAndKeyword" parameterType="AttractionGugunAndKeywordSelect"
-            resultType="AttractionData">
+            resultType="AttractionDto">
         select  ai.content_id       content_id,
                 content_type_id,
                 title,
@@ -130,7 +130,7 @@
 
     <!--  여행 경로 주변 여행지 타입으로 조회  -->
     <select id="findNearbyAttractionsByContentType" parameterType="NearByAttractionContentTypeSelect"
-            resultType="AttractionData">
+            resultType="AttractionDto">
         select  ai.content_id       content_id,
                 content_type_id,
                 title,
@@ -157,7 +157,8 @@
     </select>
 
     <!--  여행 경로 주변 여행지 타입으로 조회 개수 -->
-    <select id="countNearbyAttractionsByContentType" resultType="AttractionData">
+    <select id="countNearbyAttractionsByContentType" parameterType="NearByAttractionContentTypeSelect"
+            resultType="int">
         select  count(ai.content_id)
 
         from    attraction_info ai, attraction_description ad,
@@ -172,6 +173,37 @@
           and   ai.sido_code = area.sido_code
           and   ai.gugun_code = area.gugun_code
           and   ai.content_type_id = #{ contentType }
+    </select>
+
+    <!--  여행 경로 content id로 탐색  -->
+    <select id="findByContentId" resultType="AttractionDto">
+        select  ai.content_id       content_id,
+                content_type_id,
+                title,
+                overview,
+                addr1               addr,
+                first_image         image,
+                latitude,
+                longitude
+        from     )
+        where   ai.content_id = ad.content_id
+          and   ai.content_id = #{ contentId };
+    </select>
+
+    <!--  여행 경로의 여행지를 content id로 탐색  -->
+    <select id="findByRouteSeqAndContentId" resultType="RouteAttractionDto">
+        select  ai.content_id       content_id,
+                content_type_id,
+                title,
+                overview,
+                addr1               addr,
+                first_image         image,
+                latitude,
+                longitude
+
+        where   ai.content_id = ad.content_id
+          and   ai.content_id = #{ contentId }
+          and   ai.c;
     </select>
 
 </mapper>
