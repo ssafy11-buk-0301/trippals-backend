@@ -1,13 +1,12 @@
 package com.ssafy.trippals.route.service;
 
-import com.ssafy.trippals.route.dto.RouteInfo;
-import com.ssafy.trippals.route.dto.RouteInsertInfo;
+import com.ssafy.trippals.route.dto.RouteDto;
 
 import java.util.List;
 
 public interface RouteService {
-    void createRoute(RouteInsertInfo routeInsertInfo);
-    List<RouteInfo> findUserRoutes(int owner);
-    void updateRoute(RouteInfo routeInfo);
+    void createRoute(RouteDto routeInsertInfo);
+    List<RouteDto> findUserRoutes(int owner);
+    void updateRoute(RouteDto routeInfo);
     void deleteRoute(int owner, int routeSeq);
 }

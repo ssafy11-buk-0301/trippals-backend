@@ -5,8 +5,7 @@ import com.ssafy.trippals.SessionConst;
 import com.ssafy.trippals.common.exception.UserAuthException;
 import com.ssafy.trippals.common.exception.dto.ErrorCode;
 import com.ssafy.trippals.common.exception.dto.ErrorResult;
-import com.ssafy.trippals.user.dto.UserInfo;
-import com.ssafy.trippals.user.dto.UserInfoResponse;
+import com.ssafy.trippals.user.dto.UserDto;
 import com.ssafy.trippals.user.service.UserService;
 import org.junit.jupiter.api.Test;
 import org.mockito.stubbing.Answer;
@@ -37,19 +36,19 @@ class UserControllerTest {
     void searchUser() throws Exception {
         // given
         String email = "test";
-        UserInfo userInfo = new UserInfo(1, "test", "test", "test");
+        UserDto userInfo = new UserDto(1, "test", "test", "test", null, null);
         when(userService.getUser(any())).thenReturn(Optional.of(userInfo));
 
         // then
         mvc.perform(get("/users").param("email", email))
                 .andExpect(status().isOk())
-                .andExpect(content().json(objectMapper.writeValueAsString(new UserInfoResponse(userInfo))));
+                .andExpect(content().json(objectMapper.writeValueAsString(userInfo)));
     }
 
     @Test
     void getUser() throws Exception {
         // given
-        UserInfo userInfo = new UserInfo(1, "test", "test", "test");
+        UserDto userInfo = new UserDto(1, "test", "test", "test", null, null);
         MockHttpSession session = new MockHttpSession();
         session.setAttribute(SessionConst.USER, userInfo);
         when(userService.getUser(any())).thenReturn(Optional.of(userInfo));
@@ -57,7 +56,7 @@ class UserControllerTest {
         // then
         mvc.perform(get("/users/1").session(session))
                 .andExpect(status().isOk())
-                .andExpect(content().json(objectMapper.writeValueAsString(new UserInfoResponse(userInfo))));
+                .andExpect(content().json(objectMapper.writeValueAsString(userInfo)));
     }
 
     @Test
@@ -74,14 +73,15 @@ class UserControllerTest {
     @Test
     void updateUser() throws Exception {
         // given
-        UserInfo userInfo = new UserInfo(1, "test", "test", "test");
-        UserInfo expected = new UserInfo(1, "test2", "test2", "test");
+        UserDto userInfo = new UserDto(1, "test", "test", "test", null, null);
+        UserDto expected = new UserDto(1, "test2", "test2", "test", null, null);
         MockHttpSession session = new MockHttpSession();
         session.setAttribute(SessionConst.USER, userInfo);
-        when(userService.updateUser(any())).thenAnswer((Answer<Optional<UserInfo>>) invocationOnMock -> Optional.of(invocationOnMock.getArgument(0, UserInfo.class)));
+        when(userService.updateUser(any()))
+                .thenReturn(Optional.of(expected));
         MultiValueMap<String, String> params = new LinkedMultiValueMap<>();
         params.add("name", expected.getName());
-        params.add("profileImage", expected.getProfileImageUri());
+        params.add("profileImage", expected.getProfileImage());
 
         // then
         mvc.perform(put("/users").params(params).session(session))
@@ -92,7 +92,7 @@ class UserControllerTest {
     @Test
     void changePassword() throws Exception {
         // given
-        UserInfo userInfo = new UserInfo(1, "test", "test", "test");
+        UserDto userInfo = new UserDto(1, "test", "test", "test", null, null);
         MockHttpSession session = new MockHttpSession();
         session.setAttribute(SessionConst.USER, userInfo);
         String currentPassword = "test";

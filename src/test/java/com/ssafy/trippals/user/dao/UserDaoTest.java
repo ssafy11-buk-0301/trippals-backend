@@ -1,8 +1,6 @@
 package com.ssafy.trippals.user.dao;
 
-import com.ssafy.trippals.user.dto.UserData;
-import com.ssafy.trippals.user.dto.UserInsert;
-import com.ssafy.trippals.user.dto.UserUpdate;
+import com.ssafy.trippals.user.dto.UserDto;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Tag;
 import org.junit.jupiter.api.Test;
@@ -16,6 +14,7 @@ import java.util.UUID;
 import java.util.function.Function;
 import java.util.function.Predicate;
 
+import static java.time.LocalDate.now;
 import static org.assertj.core.api.Assertions.assertThat;
 
 @Tag("integration")
@@ -23,17 +22,17 @@ import static org.assertj.core.api.Assertions.assertThat;
 @AutoConfigureTestDatabase(replace = AutoConfigureTestDatabase.Replace.NONE)
 class UserDaoTest {
     @Autowired UserDao userDao;
-    static List<UserInsert> userInsertList = List.of(
-        new UserInsert("enjoy1", "enjoy1@ssafy.com", "1234"),
-        new UserInsert("enjoy2", "enjoy2@ssafy.com", "1234"),
-        new UserInsert("enjoy3", "enjoy3@ssafy.com", "1234"),
-        new UserInsert("enjoy4", "enjoy4@ssafy.com", "1234"),
-        new UserInsert("trip1", "trip1@ssafy.com", "1234"),
-        new UserInsert("trip2", "trip2@ssafy.com", "1234"),
-        new UserInsert("trip3", "trippals1@ssafy.com", "1234"),
-        new UserInsert("trippals", "trip3@ssafy.com", "1234"),
-        new UserInsert("trippals", "trippals2@ssafy.com", "1234"),
-        new UserInsert("trippals", "trippals3@ssafy.com", "1234")
+    static List<UserDto> userInsertList = List.of(
+        new UserDto("enjoy1", "1234", "enjoy1@ssafy.com", "test", now()),
+        new UserDto("enjoy2", "1234", "enjoy2@ssafy.com", "test", now()),
+        new UserDto("enjoy3", "1234", "enjoy3@ssafy.com", "test", now()),
+        new UserDto("enjoy4", "1234", "enjoy4@ssafy.com", "test", now()),
+        new UserDto("trip1", "1234", "trip1@ssafy.com", "test", now()),
+        new UserDto("trip2", "1234", "trip2@ssafy.com", "test", now()),
+        new UserDto("trip3", "1234", "trippals1@ssafy.com", "test", now()),
+        new UserDto("trippals", "1234", "trip3@ssafy.com", "test", now()),
+        new UserDto("trippals", "1234", "trippals2@ssafy.com", "test", now()),
+        new UserDto("trippals", "1234", "trippals3@ssafy.com", "test", now())
     );
 
     @BeforeEach
@@ -47,11 +46,11 @@ class UserDaoTest {
         String expectedEmail = "trippals2@ssafy.com";
 
         // when
-        Optional<UserData> optionalUserData = userDao.findUserDataByEmail(expectedEmail);
+        Optional<UserDto> optionalUserData = userDao.findUserDataByEmail(expectedEmail);
 
         // then
         assertThat(optionalUserData.isPresent()).isTrue();
-        UserData userData = optionalUserData.get();
+        UserDto userData = optionalUserData.get();
         assertThat(userData.getEmail()).isEqualTo(expectedEmail);
     }
 
@@ -60,15 +59,15 @@ class UserDaoTest {
         // given
         String expectedKeyword1 = "enjoy";
         String expectedKeyword2 = "trip";
-        Function<String, Predicate<UserData>> verifyKeywordGenerator =
+        Function<String, Predicate<UserDto>> verifyKeywordGenerator =
                 expectedKeyword ->
                     userData ->
                         userData.getEmail().startsWith(expectedKeyword) ||
                         userData.getName().startsWith(expectedKeyword);
 
         // when
-        List<UserData> actual1 = userDao.findUserDataByKeyword(expectedKeyword1);
-        List<UserData> actual2 = userDao.findUserDataByKeyword(expectedKeyword2);
+        List<UserDto> actual1 = userDao.findUserDataByKeyword(expectedKeyword1);
+        List<UserDto> actual2 = userDao.findUserDataByKeyword(expectedKeyword2);
 
         // then
         assertThat(actual1.isEmpty()).isFalse();
@@ -80,21 +79,21 @@ class UserDaoTest {
     @Test
     void updateUser() {
         // given
-        UserInsert target = userInsertList.get(0);
+        UserDto target = userInsertList.get(0);
         String expectedName = "modified";
         String expectedProfileImage = UUID.randomUUID().toString();
 
-        UserUpdate userUpdate = new UserUpdate(target.getSeq(), expectedName, expectedProfileImage);
+        UserDto userUpdate = new UserDto(target.getSeq(), expectedName, null, null, expectedProfileImage, null);
 
         // when
         int modifiedCount = userDao.updateUser(userUpdate);
-        Optional<UserData> optionalUserData = userDao.findUserDataByEmail(target.getEmail());
+        Optional<UserDto> optionalUserData = userDao.findUserDataByEmail(target.getEmail());
 
         // then
         assertThat(modifiedCount).isEqualTo(1);
         assertThat(optionalUserData.isPresent()).isTrue();
 
-        UserData userData = optionalUserData.get();
+        UserDto userData = optionalUserData.get();
         assertThat(userData.getName()).isEqualTo(expectedName);
         assertThat(userData.getProfileImage()).isEqualTo(expectedProfileImage);
 
@@ -103,29 +102,29 @@ class UserDaoTest {
     @Test
     void updateUserPassword() {
         // given
-        UserInsert target = userInsertList.get(0);
+        UserDto target = userInsertList.get(0);
         String expectedPassword = "modified";
 
         // when
         int modifiedCount = userDao.updateUserPassword(target.getEmail(), expectedPassword);
-        Optional<UserData> optionalUserData = userDao.findUserDataByEmail(target.getEmail());
+        Optional<UserDto> optionalUserData = userDao.findUserDataByEmail(target.getEmail());
 
         // then
         assertThat(modifiedCount).isEqualTo(1);
         assertThat(optionalUserData.isPresent()).isTrue();
 
-        UserData userData = optionalUserData.get();
+        UserDto userData = optionalUserData.get();
         assertThat(userData.getPassword()).isEqualTo(expectedPassword);
     }
 
     @Test
     void deleteUser() {
         // given
-        UserInsert target = userInsertList.get(0);
+        UserDto target = userInsertList.get(0);
 
         // when
         int modifiedCount = userDao.deleteUser(target.getSeq());
-        Optional<UserData> expectedEmpty = userDao.findUserDataByEmail(target.getEmail());
+        Optional<UserDto> expectedEmpty = userDao.findUserDataByEmail(target.getEmail());
 
         // then
         assertThat(modifiedCount).isEqualTo(1);

@@ -4,7 +4,7 @@
 
     <!--  사용자를 email로 조회  -->
     <select id="findUserDataByEmail"
-            resultType="UserData">
+            resultType="UserDto">
         select  *
         from    users
         where   email = #{email};
@@ -12,7 +12,7 @@
 
     <!--  사용자를 키워드로 조회  -->
     <select id="findUserDataByKeyword"
-            resultType="UserData">
+            resultType="UserDto">
         select  *
         from    users
         where   email like CONCAT(#{keyword}, '%')
@@ -20,14 +20,14 @@
     </select>
 
     <!--  사용자 생성  -->
-    <insert id="insertUser" parameterType="UserInsert"
+    <insert id="insertUser" parameterType="UserDto"
             useGeneratedKeys="true" keyProperty="seq">
         insert  into users (name, password, email, register_date)
         values  (#{name}, #{password}, #{email}, now());
     </insert>
 
     <!--  사용자 업데이트  -->
-    <update id="updateUser" parameterType="UserUpdate">
+    <update id="updateUser" parameterType="UserDto">
         update  users
            set  name = #{name},
                 profile_image = #{profileImage}

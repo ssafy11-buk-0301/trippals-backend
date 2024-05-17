@@ -4,19 +4,22 @@ import com.ssafy.trippals.attraction.dto.*;
 import org.apache.ibatis.annotations.Mapper;
 
 import java.util.List;
+import java.util.Optional;
 
 @Mapper
 public interface AttractionDao {
-    List<RouteAttractionData> findByRouteSeq(int routeSeq);
+    Optional<AttractionDto> findByContentId(int contentId);
+    List<RouteAttractionDto> findByRouteSeq(int routeSeq);
+    Optional<RouteAttractionDto> findByRouteSeqAndContentId(int routeSeq, int contentId);
 
-    List<AttractionData> findByKeyword(AttractionKeywordSelect attractionKeywordSelect);
-    List<AttractionData> findBySidoAndKeyword(AttractionSidoAndKeywordSelect attractionKeywordSelect);
-    List<AttractionData> findByGugunAndKeyword(AttractionGugunAndKeywordSelect attractionKeywordSelect);
+    List<AttractionDto> findByKeyword(AttractionKeywordSelect attractionKeywordSelect);
+    List<AttractionDto> findBySidoAndKeyword(AttractionSidoAndKeywordSelect attractionKeywordSelect);
+    List<AttractionDto> findByGugunAndKeyword(AttractionGugunAndKeywordSelect attractionKeywordSelect);
 
     int countByKeyword(AttractionKeywordSelect attractionKeywordSelect);
     int countBySidoAndKeyword(AttractionSidoAndKeywordSelect attractionKeywordSelect);
     int countByGugunAndKeyword(AttractionGugunAndKeywordSelect attractionKeywordSelect);
 
-    List<AttractionData> findNearbyAttractionsByContentType(NearByAttractionContentTypeSelect attractionSelect);
-    List<AttractionData> countNearbyAttractionsByContentType(NearByAttractionContentTypeSelect attractionSelect);
+    List<AttractionDto> findNearbyAttractionsByContentType(NearByAttractionContentTypeSelect attractionSelect);
+    int countNearbyAttractionsByContentType(NearByAttractionContentTypeSelect attractionSelect);
 }

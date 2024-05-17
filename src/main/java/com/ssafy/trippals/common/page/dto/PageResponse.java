@@ -5,6 +5,7 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 
 import java.util.List;
+import java.util.function.Function;
 
 @Data
 @AllArgsConstructor
@@ -18,6 +19,15 @@ public class PageResponse<T> {
 
     public PageResponse(List<T> contents, int offset, int limit, int totalContents) {
         this.contents = contents;
+        setPageAndSize(offset, limit, totalContents);
+    }
+
+    public PageResponse(List<T> contents, PageParams pageParams, int totalContents) {
+        this.contents = contents;
+        setPageAndSize(pageParams.getOffset(), pageParams.getLimit(), totalContents);
+    }
+
+    private void setPageAndSize(int offset, int limit, int totalContents) {
         this.page = (offset / limit) + 1;
         this.size = limit;
         this.totalContents = totalContents;

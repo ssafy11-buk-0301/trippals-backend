@@ -2,12 +2,8 @@ package com.ssafy.trippals.user.service;
 
 import com.ssafy.trippals.common.exception.UserAlreadyExistsException;
 import com.ssafy.trippals.common.exception.UserAuthException;
-import com.ssafy.trippals.common.exception.UserNotFoundException;
 import com.ssafy.trippals.user.dao.UserDao;
-import com.ssafy.trippals.user.dto.SignUpInfo;
-import com.ssafy.trippals.user.dto.UserInfo;
-import com.ssafy.trippals.user.dto.UserInsert;
-import com.ssafy.trippals.user.dto.UserUpdate;
+import com.ssafy.trippals.user.dto.UserDto;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -21,17 +17,17 @@ public class UserServiceImpl implements UserService {
     private final UserDao userDao;
 
     @Override
-    public Optional<UserInfo> login(String email, String password) {
+    public Optional<UserDto> login(String email, String password) {
         return userDao.findUserDataByEmail(email)
                 .filter(u -> u.getPassword().equals(password))
-                .map(UserInfo::new);
+                .map(u -> { u.setPassword(null); return u; });
     }
 
     @Override
-    public boolean signUp(SignUpInfo signUpInfo) {
-        userDao.findUserDataByEmail(signUpInfo.getEmail()).ifPresent(u -> {throw new UserAlreadyExistsException();});
+    public boolean signUp(UserDto userDto) {
+        userDao.findUserDataByEmail(userDto.getEmail()).ifPresent(u -> {throw new UserAlreadyExistsException();});
 
-        int modified = userDao.insertUser(new UserInsert(signUpInfo));
+        int modified = userDao.insertUser(userDto);
 
         if (modified > 0) {
             return true;
@@ -41,14 +37,14 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
-    public Optional<UserInfo> getUser(String email) {
-        return userDao.findUserDataByEmail(email).map(UserInfo::new);
+    public Optional<UserDto> getUser(String email) {
+        return userDao.findUserDataByEmail(email);
     }
 
     @Override
-    public Optional<UserInfo> updateUser(UserInfo userInfo) {
-        userDao.updateUser(new UserUpdate(userInfo));
-        return getUser(userInfo.getEmail());
+    public Optional<UserDto> updateUser(UserDto userDto) {
+        userDao.updateUser(userDto);
+        return getUser(userDto.getEmail());
     }
 
     @Override

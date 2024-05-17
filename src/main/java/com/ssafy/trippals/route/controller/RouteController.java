@@ -3,7 +3,7 @@ package com.ssafy.trippals.route.controller;
 import com.ssafy.trippals.SessionConst;
 import com.ssafy.trippals.route.dto.*;
 import com.ssafy.trippals.route.service.RouteService;
-import com.ssafy.trippals.user.dto.UserInfo;
+import com.ssafy.trippals.user.dto.UserDto;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -20,19 +20,18 @@ public class RouteController {
     @PostMapping
     @ResponseStatus(HttpStatus.OK)
     public void createRoute(
-            @SessionAttribute(SessionConst.USER) UserInfo userInfo,
-            @ModelAttribute RouteInsertForm routeInsertForm
+            @SessionAttribute(SessionConst.USER) UserDto UserDto,
+            @ModelAttribute RouteForm routeForm
     ) {
-        routeService.createRoute(new RouteInsertInfo(routeInsertForm, userInfo.getSeq()));
+        routeService.createRoute(new RouteDto(UserDto.getSeq(), routeForm));
     }
 
     @GetMapping
-    public ResponseEntity<List<RouteInfoResponse>> getRoutes(
-            @SessionAttribute(SessionConst.USER) UserInfo userInfo
+    public ResponseEntity<List<RouteDto>> getRoutes(
+            @SessionAttribute(SessionConst.USER) UserDto UserDto
     ) {
-        List<RouteInfoResponse> userRouteInfoResponses =
-                routeService.findUserRoutes(userInfo.getSeq()).stream()
-                        .map(RouteInfoResponse::new)
+        List<RouteDto> userRouteInfoResponses =
+                routeService.findUserRoutes(UserDto.getSeq()).stream()
                         .toList();
 
         return ResponseEntity.ok(userRouteInfoResponses);
@@ -41,22 +40,19 @@ public class RouteController {
     @PutMapping("/{routeSeq}")
     @ResponseStatus(HttpStatus.OK)
     public void updateRoute(
-            @SessionAttribute(SessionConst.USER) UserInfo userInfo,
+            @SessionAttribute(SessionConst.USER) UserDto UserDto,
             @PathVariable Integer routeSeq,
-            @ModelAttribute RouteUpdateForm routeUpdateForm
+            @ModelAttribute RouteForm routeForm
     ) {
-        RouteInfo routeInfo = new RouteInfo(routeSeq, userInfo.getSeq(), routeUpdateForm.getName(),
-                routeUpdateForm.getOverview(), routeUpdateForm.getThumbnail(), routeUpdateForm.getStartDate());
-
-        routeService.updateRoute(routeInfo);
+        routeService.updateRoute(new RouteDto(routeSeq, UserDto.getSeq(), routeForm));
     }
 
     @DeleteMapping("/{routeSeq}")
     @ResponseStatus(HttpStatus.OK)
     public void deleteRoute(
-            @SessionAttribute(SessionConst.USER) UserInfo userInfo,
+            @SessionAttribute(SessionConst.USER) UserDto UserDto,
             @PathVariable Integer routeSeq
     ) {
-        routeService.deleteRoute(userInfo.getSeq(), routeSeq);
+        routeService.deleteRoute(UserDto.getSeq(), routeSeq);
     }
 }

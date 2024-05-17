@@ -10,4 +10,5 @@ import lombok.NoArgsConstructor;
 public class PageParams {
     private int offset = 0;
     private int limit = 10;
+    private String orderBy;
 }

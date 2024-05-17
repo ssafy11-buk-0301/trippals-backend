@@ -3,8 +3,7 @@ package com.ssafy.trippals.user.controller;
 import com.ssafy.trippals.SessionConst;
 import com.ssafy.trippals.common.exception.UserAuthException;
 import com.ssafy.trippals.common.exception.UserNotFoundException;
-import com.ssafy.trippals.user.dto.UserInfo;
-import com.ssafy.trippals.user.dto.UserInfoResponse;
+import com.ssafy.trippals.user.dto.UserDto;
 import com.ssafy.trippals.user.dto.UserPasswordUpdateForm;
 import com.ssafy.trippals.user.dto.UserUpdateForm;
 import com.ssafy.trippals.user.service.UserService;
@@ -22,40 +21,35 @@ public class UserController {
     private final UserService userService;
 
     @GetMapping
-    public ResponseEntity<UserInfoResponse> searchUser(@RequestParam("email") String email) {
-        return ResponseEntity.ok(userService.getUser(email).map(UserInfoResponse::new).orElse(null));
+    public ResponseEntity<UserDto> searchUser(@RequestParam("email") String email) {
+        return ResponseEntity.ok(userService.getUser(email).orElse(null));
     }
 
     @GetMapping("/{userSeq}")
-    public ResponseEntity<UserInfoResponse> getUser(
-            @SessionAttribute(value = SessionConst.USER, required = false) UserInfo userInfo
+    public ResponseEntity<UserDto> getUser(
+            @SessionAttribute(value = SessionConst.USER, required = false) UserDto userDto
     ) {
-        if (userInfo == null) {
+        if (userDto == null) {
             throw new UserAuthException();
         }
 
-        return userService.getUser(userInfo.getEmail())
-                .map(UserInfoResponse::new)
+        return userService.getUser(userDto.getEmail())
                 .map(ResponseEntity::ok)
                 .orElseThrow(UserNotFoundException::new);
     }
 
     @PutMapping
-    public ResponseEntity<UserInfoResponse> updateUser(
-            @SessionAttribute(value = SessionConst.USER, required = false) UserInfo userInfo,
+    public ResponseEntity<UserDto> updateUser(
+            @SessionAttribute(value = SessionConst.USER, required = false) UserDto userDto,
             @ModelAttribute UserUpdateForm userUpdateForm
     ) {
-        if (userInfo == null) {
+        if (userDto == null) {
             throw new UserAuthException();
         }
 
-        UserInfo userInfoUpdate =
-                new UserInfo(userInfo.getSeq(), userUpdateForm.getName(), userUpdateForm.getProfileImage(), userInfo.getEmail());
+        Optional<UserDto> optionalUserDto = userService.updateUser(new UserDto(userDto.getSeq(), userUpdateForm));
 
-        Optional<UserInfo> optionalUserInfo = userService.updateUser(userInfoUpdate);
-
-        return optionalUserInfo
-                .map(UserInfoResponse::new)
+        return optionalUserDto
                 .map(ResponseEntity::ok)
                 .orElseThrow(UserNotFoundException::new);
     }
@@ -63,14 +57,14 @@ public class UserController {
     @PutMapping("/password")
     @ResponseStatus(HttpStatus.OK)
     public void changePassword(
-            @SessionAttribute(value = SessionConst.USER, required = false) UserInfo userInfo,
+            @SessionAttribute(value = SessionConst.USER, required = false) UserDto userDto,
             @ModelAttribute UserPasswordUpdateForm userPasswordUpdateForm
     ) {
-        if (userInfo == null) {
+        if (userDto == null) {
             throw new UserAuthException();
         }
 
-        userService.updateUserPassword(userInfo.getEmail(),
+        userService.updateUserPassword(userDto.getEmail(),
                 userPasswordUpdateForm.getCurrentPassword(),
                 userPasswordUpdateForm.getNewPassword());
     }

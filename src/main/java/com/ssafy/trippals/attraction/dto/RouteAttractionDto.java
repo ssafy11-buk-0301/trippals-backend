@@ -1,15 +1,13 @@
-package com.ssafy.trippals.route.dto;
+package com.ssafy.trippals.attraction.dto;
 
 import lombok.AllArgsConstructor;
 import lombok.Data;
-import lombok.NoArgsConstructor;
 
 import java.math.BigDecimal;
 
 @Data
 @AllArgsConstructor
-@NoArgsConstructor
-public class AttractionInfo {
+public class RouteAttractionDto {
     private Integer contentId;
     private Integer contentTypeId;
     private String title;
@@ -18,4 +16,6 @@ public class AttractionInfo {
     private String image;
     private BigDecimal latitude;
     private BigDecimal longitude;
+
+    private Integer orderNumber;
 }
