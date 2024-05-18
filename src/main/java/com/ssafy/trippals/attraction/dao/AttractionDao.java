@@ -12,13 +12,13 @@ public interface AttractionDao {
     List<RouteAttractionDto> findByRouteSeq(int routeSeq);
     Optional<RouteAttractionDto> findByRouteSeqAndContentId(int routeSeq, int contentId);
 
-    List<AttractionDto> findByKeyword(AttractionKeywordSelect attractionKeywordSelect);
-    List<AttractionDto> findBySidoAndKeyword(AttractionSidoAndKeywordSelect attractionKeywordSelect);
-    List<AttractionDto> findByGugunAndKeyword(AttractionGugunAndKeywordSelect attractionKeywordSelect);
+    List<AttractionDto> findByKeyword(AttractionSearchParams attractionKeywordSelect);
+    List<AttractionDto> findBySidoAndKeyword(AttractionSearchParams attractionKeywordSelect);
+    List<AttractionDto> findByGugunAndKeyword(AttractionSearchParams attractionKeywordSelect);
 
-    int countByKeyword(AttractionKeywordSelect attractionKeywordSelect);
-    int countBySidoAndKeyword(AttractionSidoAndKeywordSelect attractionKeywordSelect);
-    int countByGugunAndKeyword(AttractionGugunAndKeywordSelect attractionKeywordSelect);
+    int countByKeyword(AttractionSearchParams attractionKeywordSelect);
+    int countBySidoAndKeyword(AttractionSearchParams attractionKeywordSelect);
+    int countByGugunAndKeyword(AttractionSearchParams attractionKeywordSelect);
 
     List<AttractionDto> findNearbyAttractionsByContentType(NearByAttractionContentTypeSelect attractionSelect);
     int countNearbyAttractionsByContentType(NearByAttractionContentTypeSelect attractionSelect);

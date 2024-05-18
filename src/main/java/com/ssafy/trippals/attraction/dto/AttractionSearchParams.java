@@ -13,4 +13,15 @@ public class AttractionSearchParams {
     private Integer sidocode;
     private Integer guguncode;
     private String keyword;
+
+    public AttractionSearchParams(PageParams pageParams, Integer sidocode, String keyword) {
+        this.pageParams = pageParams;
+        this.sidocode = sidocode;
+        this.keyword = keyword;
+    }
+
+    public AttractionSearchParams(PageParams pageParams, String keyword) {
+        this.pageParams = pageParams;
+        this.keyword = keyword;
+    }
 }

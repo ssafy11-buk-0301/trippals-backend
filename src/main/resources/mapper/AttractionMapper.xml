@@ -24,7 +24,7 @@
     </select>
 
     <!--  여행지 키워드로 검색  -->
-    <select id="findByKeyword" parameterType="AttractionKeywordSelect"
+    <select id="findByKeyword" parameterType="AttractionSearchParams"
             resultType="AttractionDto">
         select  ai.content_id       content_id,
                 content_type_id,
@@ -41,11 +41,11 @@
           and   ai.content_type_id = 12
           and   ai.title like CONCAT('%', #{ keyword }, '%')
 
-        limit   #{ offset }, #{ limit }
+        limit   #{ pageParams.offset }, #{ pageParams.limit }
     </select>
 
     <!--  여행지 시도 코드와 키워드로 검색  -->
-    <select id="findBySidoAndKeyword" parameterType="AttractionSidoAndKeywordSelect"
+    <select id="findBySidoAndKeyword" parameterType="AttractionSearchParams"
             resultType="AttractionDto">
         select  ai.content_id       content_id,
                 content_type_id,
@@ -63,11 +63,11 @@
           and   ai.sido_code = #{ sidocode }
           and   ai.title like CONCAT('%', #{ keyword }, '%')
 
-        limit   #{ offset }, #{ limit }
+        limit   #{ pageParams.offset }, #{ pageParams.limit }
     </select>
 
     <!--  여행지 구군 코드와 키워드로 검색  -->
-    <select id="findByGugunAndKeyword" parameterType="AttractionGugunAndKeywordSelect"
+    <select id="findByGugunAndKeyword" parameterType="AttractionSearchParams"
             resultType="AttractionDto">
         select  ai.content_id       content_id,
                 content_type_id,
@@ -86,11 +86,11 @@
           and   ai.gugun_code = #{ guguncode }
           and   ai.title like CONCAT('%', #{ keyword }, '%')
 
-        limit   #{ offset }, #{ limit };
+        limit   #{ pageParams.offset }, #{ pageParams.limit }
     </select>
 
     <!--  여행지 키워드로 검색 개수 조회  -->
-    <select id="countByKeyword" parameterType="AttractionKeywordSelect"
+    <select id="countByKeyword" parameterType="AttractionSearchParams"
             resultType="int">
         select  count(ai.content_id)
 
@@ -102,7 +102,7 @@
     </select>
 
     <!--  여행지 시도 코드와 키워드로 검색 개수 조회  -->
-    <select id="countBySidoAndKeyword" parameterType="AttractionSidoAndKeywordSelect"
+    <select id="countBySidoAndKeyword" parameterType="AttractionSearchParams"
             resultType="int">
         select  count(ai.content_id)
 
@@ -115,7 +115,7 @@
     </select>
 
     <!--  여행지 구군 코드와 키워드로 검색 개수 조회 -->
-    <select id="countByGugunAndKeyword" parameterType="AttractionGugunAndKeywordSelect"
+    <select id="countByGugunAndKeyword" parameterType="AttractionSearchParams"
             resultType="int">
         select  count(ai.content_id)
 
