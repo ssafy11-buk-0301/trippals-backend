@@ -57,7 +57,7 @@ class AttractionDaoTest {
         // given
         String keyword = "국립";
         int sidocode = 32;
-        AttractionSearchParams attractionSidoAndKeywordSelect = new AttractionSearchParams(pageParams, sidocode, keyword);
+        AttractionSearchParams attractionSidoAndKeywordSelect = new AttractionSearchParams(pageParams, keyword, sidocode);
 
         // when
         List<AttractionDto> actual = attractionDao.findBySidoAndKeyword(attractionSidoAndKeywordSelect);
