@@ -5,6 +5,7 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 
 import java.time.LocalDateTime;
+import java.util.List;
 
 @Data
 @NoArgsConstructor
@@ -17,4 +18,6 @@ public class BoardDto {
     private LocalDateTime regDt;
     private boolean isDraft;
     private Integer routeSeq;
+    private List<BoardFileDto> fileList;
+    private boolean sameUser;
 }
