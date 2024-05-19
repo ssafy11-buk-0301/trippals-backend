@@ -41,7 +41,7 @@ public class UserController {
     @PutMapping
     public ResponseEntity<UserDto> updateUser(
             @SessionAttribute(value = SessionConst.USER, required = false) UserDto userDto,
-            @ModelAttribute UserUpdateForm userUpdateForm
+            @RequestBody UserUpdateForm userUpdateForm
     ) {
         if (userDto == null) {
             throw new UserAuthException();
@@ -58,7 +58,7 @@ public class UserController {
     @ResponseStatus(HttpStatus.OK)
     public void changePassword(
             @SessionAttribute(value = SessionConst.USER, required = false) UserDto userDto,
-            @ModelAttribute UserPasswordUpdateForm userPasswordUpdateForm
+            @RequestBody UserPasswordUpdateForm userPasswordUpdateForm
     ) {
         if (userDto == null) {
             throw new UserAuthException();

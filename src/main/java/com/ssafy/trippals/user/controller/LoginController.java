@@ -10,6 +10,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RestController;
 
 import java.util.Optional;
@@ -20,7 +21,7 @@ public class LoginController {
     private final UserService userService;
 
     @PostMapping("/login")
-    public ResponseEntity<UserDto> login(HttpSession session, @ModelAttribute LoginForm loginForm) {
+    public ResponseEntity<UserDto> login(HttpSession session, @RequestBody LoginForm loginForm) {
         Optional<UserDto> optionalUserDto = userService.login(loginForm.getEmail(), loginForm.getPassword());
 
         return optionalUserDto
