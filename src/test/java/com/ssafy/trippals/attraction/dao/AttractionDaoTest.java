@@ -1,6 +1,10 @@
 package com.ssafy.trippals.attraction.dao;
 
-import com.ssafy.trippals.attraction.dto.*;
+import com.ssafy.trippals.attraction.dto.AttractionDto;
+import com.ssafy.trippals.attraction.dto.AttractionSearchParams;
+import com.ssafy.trippals.attraction.dto.ContentType;
+import com.ssafy.trippals.attraction.dto.NearByAttractionContentTypeSelect;
+import com.ssafy.trippals.common.page.dto.PageParams;
 import com.ssafy.trippals.route.dao.RouteDao;
 import com.ssafy.trippals.route.dto.RouteDto;
 import org.junit.jupiter.api.BeforeEach;
@@ -26,6 +30,8 @@ class AttractionDaoTest {
             125266, 125405, 125406, 125407, 125408, 125409, 125410, 125411, 125412, 125413
     );
 
+    static PageParams pageParams = new PageParams(0, 10, "");
+
     @BeforeEach
     void setUp() {
         routeDao.insertRoute(routeInsert);
@@ -36,10 +42,10 @@ class AttractionDaoTest {
     void findByKeyword() {
         // given
         String expected = "국립";
-        AttractionKeywordSelect attractionKeywordSelect = new AttractionKeywordSelect(0, 10, expected);
+        AttractionSearchParams params = new AttractionSearchParams(pageParams, expected);
 
         // when
-        List<AttractionDto> actual = attractionDao.findByKeyword(attractionKeywordSelect);
+        List<AttractionDto> actual = attractionDao.findByKeyword(params);
 
         // then
         assertThat(actual).isNotEmpty();
@@ -51,7 +57,7 @@ class AttractionDaoTest {
         // given
         String keyword = "국립";
         int sidocode = 32;
-        AttractionSidoAndKeywordSelect attractionSidoAndKeywordSelect = new AttractionSidoAndKeywordSelect(0, 10, sidocode, keyword);
+        AttractionSearchParams attractionSidoAndKeywordSelect = new AttractionSearchParams(pageParams, keyword, sidocode);
 
         // when
         List<AttractionDto> actual = attractionDao.findBySidoAndKeyword(attractionSidoAndKeywordSelect);
@@ -67,7 +73,7 @@ class AttractionDaoTest {
         String keyword = "국립";
         int sidocode = 32;
         int guguncode = 10;
-        AttractionGugunAndKeywordSelect attractionGugunAndKeywordSelect = new AttractionGugunAndKeywordSelect(0, 10, sidocode, guguncode, keyword);
+        AttractionSearchParams attractionGugunAndKeywordSelect = new AttractionSearchParams(pageParams, sidocode, guguncode, keyword);
 
         // when
         List<AttractionDto> actual = attractionDao.findByGugunAndKeyword(attractionGugunAndKeywordSelect);

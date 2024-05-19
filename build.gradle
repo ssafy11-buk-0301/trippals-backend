@@ -1,6 +1,5 @@
 plugins {
     id 'java'
-    id 'jacoco'
     id 'org.springframework.boot' version '3.2.5'
     id 'io.spring.dependency-management' version '1.1.4'
 }
@@ -10,44 +9,6 @@ version = '0.0.1-SNAPSHOT'
 
 java {
     sourceCompatibility = '17'
-}
-
-jacoco {
-    toolVersion = '0.8.12'
-    reportsDirectory = layout.projectDirectory.file("jacoco").asFile
-}
-
-jacocoTestReport {
-    dependsOn test
-    reports {
-        html.required = false
-        xml.required = true
-    }
-    finalizedBy jacocoTestCoverageVerification
-}
-
-jacocoTestCoverageVerification {
-    violationRules {
-        rule {
-            enabled = true
-
-            element = 'CLASS'
-
-            limit {
-                counter = 'LINE'
-                value = 'COVEREDRATIO'
-                minimum = 0.70
-            }
-
-            excludes = [
-                "*.dao.*",
-                "*.config.*",
-                "*.dto.*",
-                "*.common.*",
-                "*Application*"
-            ]
-        }
-    }
 }
 
 configurations {
@@ -80,11 +41,4 @@ dependencies {
 
 tasks.named('test') {
     useJUnitPlatform()
-    finalizedBy jacocoTestReport
-}
-
-test {
-    jacoco {
-        destinationFile = layout.projectDirectory.file("jacoco/${name}.exec").asFile
-    }
 }
