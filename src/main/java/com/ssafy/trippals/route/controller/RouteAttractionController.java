@@ -2,6 +2,7 @@ package com.ssafy.trippals.route.controller;
 
 import com.ssafy.trippals.SessionConst;
 import com.ssafy.trippals.attraction.dto.AttractionDto;
+import com.ssafy.trippals.attraction.dto.ContentType;
 import com.ssafy.trippals.common.page.dto.PageResponse;
 import com.ssafy.trippals.route.dto.NearByAttractionContentTypeParams;
 import com.ssafy.trippals.route.service.RouteAttractionService;
@@ -61,7 +62,7 @@ public class RouteAttractionController {
     ) {
         PageResponse<AttractionDto> pageResponse =
                 routeAttractionService.getNearbyRouteAttractions(UserDto.getSeq(), routeSeq,
-                        params.getPageParams(), params.getContentType());
+                        params.getPageParams(), ContentType.getContentType(params.getContentType()));
 
         return ResponseEntity.ok(pageResponse);
     }
