@@ -15,13 +15,13 @@ public class SignUpController {
 
     @PostMapping("/signUp")
     @ResponseStatus(HttpStatus.OK)
-    public void signUp(@ModelAttribute SignUpForm signUpForm) {
+    public void signUp(@RequestBody SignUpForm signUpForm) {
         userService.signUp(new UserDto(signUpForm));
     }
 
     @GetMapping("/signUp/confirm")
     @ResponseStatus(HttpStatus.OK)
-    public void confirm(String email) {
+    public void confirm(@RequestParam("email") String email) {
         userService.getUser(email).ifPresent((u) -> { throw new UserAlreadyExistsException(); });
     }
 }
