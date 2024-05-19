@@ -5,7 +5,6 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 
 import java.util.List;
-import java.util.function.Function;
 
 @Data
 @AllArgsConstructor
@@ -28,7 +27,7 @@ public class PageResponse<T> {
     }
 
     private void setPageAndSize(int offset, int limit, int totalContents, int size) {
-        this.page = (offset / limit) + 1;
+        this.page = limit == 0 ? 1 : (offset / limit) + 1;
         this.totalContents = totalContents;
         this.size = size;
         this.totalPage = (int) Math.ceil((double) totalContents / limit);
