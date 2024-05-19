@@ -1,6 +1,7 @@
 package com.ssafy.trippals.common.config;
 
 import com.ssafy.trippals.common.converter.IntegerToContentTypeConverter;
+import com.ssafy.trippals.common.interceptor.LogInterceptor;
 import com.ssafy.trippals.common.interceptor.LoginInterceptor;
 import lombok.RequiredArgsConstructor;
 import org.springframework.context.annotation.Configuration;
@@ -13,6 +14,7 @@ import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
 @RequiredArgsConstructor
 public class WebConfig implements WebMvcConfigurer {
     private final LoginInterceptor loginInterceptor;
+    private final LogInterceptor logInterceptor;
 
     @Override
     public void addFormatters(FormatterRegistry registry) {
@@ -32,5 +34,8 @@ public class WebConfig implements WebMvcConfigurer {
         registry.addInterceptor(loginInterceptor)
                 .addPathPatterns("/**")
                 .excludePathPatterns("/login", "/signUp/**", "/attractions/**", "/docs/**", "/v3/**", "/swagger-ui/**");
+
+        registry.addInterceptor(logInterceptor)
+                .addPathPatterns("/**");
     }
 }
