@@ -21,7 +21,7 @@ public class RouteController {
     @ResponseStatus(HttpStatus.OK)
     public void createRoute(
             @SessionAttribute(SessionConst.USER) UserDto UserDto,
-            @RequestBody RouteForm routeForm
+            @ModelAttribute RouteForm routeForm
     ) {
         routeService.createRoute(UserDto.getSeq(), routeForm);
     }
@@ -41,7 +41,7 @@ public class RouteController {
     @ResponseStatus(HttpStatus.OK)
     public void updateRoute(
             @SessionAttribute(SessionConst.USER) UserDto userDto,
-            @PathVariable Integer routeSeq,
+            @PathVariable("routeSeq") Integer routeSeq,
             @ModelAttribute RouteForm routeForm
     ) {
         routeService.updateRoute(routeSeq, userDto.getSeq(), routeForm);
@@ -51,7 +51,7 @@ public class RouteController {
     @ResponseStatus(HttpStatus.OK)
     public void deleteRoute(
             @SessionAttribute(SessionConst.USER) UserDto UserDto,
-            @PathVariable Integer routeSeq
+            @PathVariable("routeSeq") Integer routeSeq
     ) {
         routeService.deleteRoute(UserDto.getSeq(), routeSeq);
     }

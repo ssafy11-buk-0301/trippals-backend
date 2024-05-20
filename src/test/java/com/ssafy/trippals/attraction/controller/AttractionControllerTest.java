@@ -14,6 +14,7 @@ import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 
+import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.List;
 
@@ -25,7 +26,7 @@ class AttractionControllerTest {
     @Autowired AttractionDao attractionDao;
     @Autowired RouteDao routeDao;
 
-    static RouteDto routeInsert = new RouteDto(1, "route1", "overview1", "thumbnail1", LocalDateTime.now());
+    static RouteDto routeInsert = new RouteDto(1, "route1", "overview1", "thumbnail1", LocalDate.now());
 
     static List<Integer> attractionInsertList = List.of(
             125266, 125405, 125406, 125407, 125408, 125409, 125410, 125411, 125412, 125413

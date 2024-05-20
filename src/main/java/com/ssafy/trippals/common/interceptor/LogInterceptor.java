@@ -7,6 +7,7 @@ import org.springframework.stereotype.Component;
 import org.springframework.web.servlet.HandlerInterceptor;
 
 import java.util.Enumeration;
+import java.util.Map;
 
 @Component
 @Slf4j
@@ -15,15 +16,20 @@ public class LogInterceptor implements HandlerInterceptor {
     public boolean preHandle(HttpServletRequest request, HttpServletResponse response, Object handler) throws Exception {
         log.debug("path: {}", request.getRequestURI());
         log.debug("method: {}", request.getMethod());
-        log.debug("params: {}", collectionsToString(request.getParameterNames()));
+        log.debug("params: {}", collectionsToString(request.getParameterMap()));
         return true;
     }
 
-    private String collectionsToString(Enumeration<String> collection) {
+    private String collectionsToString(Map<String, String[]> collection) {
         StringBuilder sb = new StringBuilder();
-        while (collection.hasMoreElements()) {
-            sb.append(collection.nextElement());
-            sb.append(",");
+        for (Map.Entry<String, String[]> entry : collection.entrySet()) {
+            sb.append(entry.getKey());
+            sb.append(": ");
+            for (String value : entry.getValue()) {
+                sb.append(value);
+                sb.append(", ");
+            }
+            sb.append("\n");
         }
         return sb.toString();
     }

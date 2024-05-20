@@ -24,16 +24,16 @@ class RouteDaoTest {
     @Autowired AttractionDao attractionDao;
 
     static List<RouteDto> routeInsertList = List.of(
-            new RouteDto(1, "route1", "overview1", "thumbnail1", LocalDateTime.now()),
-            new RouteDto(1, "route2", "overview2", "thumbnail2", LocalDateTime.now()),
-            new RouteDto(1, "route3", "overview3", "thumbnail3", LocalDateTime.now()),
-            new RouteDto(1, "route4", "overview4", "thumbnail4", LocalDateTime.now()),
-            new RouteDto(2, "route5", "overview5", "thumbnail5", LocalDateTime.now()),
-            new RouteDto(2, "route6", "overview6", "thumbnail6", LocalDateTime.now()),
-            new RouteDto(3, "route7", "overview7", "thumbnail7", LocalDateTime.now()),
-            new RouteDto(3, "route8", "overview8", "thumbnail8", LocalDateTime.now()),
-            new RouteDto(3, "route9", "overview9", "thumbnail9", LocalDateTime.now()),
-            new RouteDto(3, "route10", "overview10", "thumbnail10", LocalDateTime.now())
+            new RouteDto(1, "route1", "overview1", "thumbnail1", LocalDate.now()),
+            new RouteDto(1, "route2", "overview2", "thumbnail2", LocalDate.now()),
+            new RouteDto(1, "route3", "overview3", "thumbnail3", LocalDate.now()),
+            new RouteDto(1, "route4", "overview4", "thumbnail4", LocalDate.now()),
+            new RouteDto(2, "route5", "overview5", "thumbnail5", LocalDate.now()),
+            new RouteDto(2, "route6", "overview6", "thumbnail6", LocalDate.now()),
+            new RouteDto(3, "route7", "overview7", "thumbnail7", LocalDate.now()),
+            new RouteDto(3, "route8", "overview8", "thumbnail8", LocalDate.now()),
+            new RouteDto(3, "route9", "overview9", "thumbnail9", LocalDate.now()),
+            new RouteDto(3, "route10", "overview10", "thumbnail10", LocalDate.now())
     );
 
     static List<Integer> attractionInsertList = List.of(
@@ -62,7 +62,7 @@ class RouteDaoTest {
         // given
         RouteDto target = routeInsertList.get(0);
         RouteDto routeUpdate = new RouteDto(target.getSeq(), target.getOwner(),
-                "modifiedName", "modifiedOverview", "modifiedThumbnail", LocalDate.now().atStartOfDay());
+                "modifiedName", "modifiedOverview", "modifiedThumbnail", LocalDate.now());
 
         // when
         int modifiedCount = routeDao.updateRoute(routeUpdate);

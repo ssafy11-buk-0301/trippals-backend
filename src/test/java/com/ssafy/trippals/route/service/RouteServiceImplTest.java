@@ -17,7 +17,7 @@ import org.springframework.test.context.junit.jupiter.SpringExtension;
 import java.util.List;
 import java.util.Optional;
 
-import static java.time.LocalDateTime.now;
+import static java.time.LocalDate.now;
 import static org.assertj.core.api.AssertionsForClassTypes.assertThatNoException;
 import static org.assertj.core.api.AssertionsForClassTypes.assertThatThrownBy;
 import static org.mockito.ArgumentMatchers.any;

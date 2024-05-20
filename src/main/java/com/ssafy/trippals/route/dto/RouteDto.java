@@ -4,6 +4,7 @@ import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
+import java.time.LocalDate;
 import java.time.LocalDateTime;
 
 @Data
@@ -15,9 +16,9 @@ public class RouteDto {
     private String name;
     private String overview;
     private String thumbnail;
-    private LocalDateTime startDate;
+    private LocalDate startDate;
 
-    public RouteDto(Integer owner, String name, String overview, String thumbnail, LocalDateTime startDate) {
+    public RouteDto(Integer owner, String name, String overview, String thumbnail, LocalDate startDate) {
         this.owner = owner;
         this.name = name;
         this.overview = overview;
