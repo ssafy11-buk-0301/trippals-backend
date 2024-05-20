@@ -30,7 +30,9 @@
         update route
            set name = #{name},
                overview = #{overview},
+               <if test="thumbnail != null">
                thumbnail = #{thumbnail},
+               </if>
                start_date = #{startDate}
         where  seq = #{seq}
           and  owner = #{owner};

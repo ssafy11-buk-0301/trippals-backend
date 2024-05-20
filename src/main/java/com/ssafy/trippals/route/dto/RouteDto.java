@@ -24,21 +24,4 @@ public class RouteDto {
         this.thumbnail = thumbnail;
         this.startDate = startDate;
     }
-
-    public RouteDto(Integer owner, RouteForm routeForm) {
-        this.owner = owner;
-        this.name = routeForm.getName();
-        this.overview = routeForm.getOverview();
-        this.thumbnail = routeForm.getThumbnail();
-        this.startDate = routeForm.getStartDate();
-    }
-
-    public RouteDto(Integer seq, Integer owner, RouteForm routeForm) {
-        this.seq = seq;
-        this.owner = owner;
-        this.name = routeForm.getName();
-        this.overview = routeForm.getOverview();
-        this.thumbnail = routeForm.getThumbnail();
-        this.startDate = routeForm.getStartDate();
-    }
 }

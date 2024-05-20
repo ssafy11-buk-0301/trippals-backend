@@ -4,12 +4,14 @@ import com.ssafy.trippals.common.exception.RouteLimitExceededException;
 import com.ssafy.trippals.common.exception.UserAuthException;
 import com.ssafy.trippals.route.dao.RouteDao;
 import com.ssafy.trippals.route.dto.RouteDto;
+import com.ssafy.trippals.route.dto.RouteForm;
 import org.assertj.core.api.Assertions;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
+import org.springframework.mock.web.MockMultipartFile;
 import org.springframework.test.context.junit.jupiter.SpringExtension;
 
 import java.util.List;
@@ -45,7 +47,7 @@ class RouteServiceImplTest {
         when(routeDao.findRouteDtoByOwner(any())).thenReturn(routeDtos);
 
         // then
-        assertThatNoException().isThrownBy(() -> routeService.createRoute(routeDtos.get(0)));
+        assertThatNoException().isThrownBy(() -> routeService.createRoute(routeDtos.get(0).getOwner(), new RouteForm()));
     }
 
     @Test
@@ -59,7 +61,7 @@ class RouteServiceImplTest {
         when(routeDao.findRouteDtoByOwner(null)).thenReturn(routeDtos);
 
         // then
-        assertThatThrownBy(() -> routeService.createRoute(new RouteDto()))
+        assertThatThrownBy(() -> routeService.createRoute(0, new RouteForm()))
                 .isInstanceOf(RouteLimitExceededException.class);
     }
 
@@ -71,8 +73,8 @@ class RouteServiceImplTest {
         when(routeDao.findRouteDtoBySeq(1)).thenReturn(Optional.of(expected));
 
         // then
-        assertThatNoException().isThrownBy(() -> routeService.updateRoute(routeDto));
-        assertThatNoException().isThrownBy(() -> routeService.updateRoute(routeDto));
+        assertThatNoException().isThrownBy(() -> routeService.updateRoute(routeDto.getSeq(), routeDto.getOwner(), null));
+        assertThatNoException().isThrownBy(() -> routeService.updateRoute(routeDto.getSeq(), routeDto.getOwner(), null));
     }
 
     @Test
@@ -83,7 +85,7 @@ class RouteServiceImplTest {
         when(routeDao.findRouteDtoBySeq(1)).thenReturn(Optional.of(expected));
 
         // then
-        assertThatThrownBy(() -> routeService.updateRoute(routeDto)).isInstanceOf(UserAuthException.class);
+        assertThatThrownBy(() -> routeService.updateRoute(routeDto.getSeq(), routeDto.getOwner(), null)).isInstanceOf(UserAuthException.class);
         assertThatThrownBy(() -> routeService.deleteRoute(1, 1)).isInstanceOf(UserAuthException.class);
     }
 }
