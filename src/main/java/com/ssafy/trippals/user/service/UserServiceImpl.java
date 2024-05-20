@@ -38,7 +38,9 @@ public class UserServiceImpl implements UserService {
 
     @Override
     public Optional<UserDto> getUser(String email) {
-        return userDao.findUserDataByEmail(email);
+        return userDao.findUserDataByEmail(email).stream()
+                .peek(u -> u.setPassword(""))
+                .findFirst();
     }
 
     @Override
