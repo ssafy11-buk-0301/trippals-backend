@@ -23,7 +23,7 @@ public class RouteController {
             @SessionAttribute(SessionConst.USER) UserDto UserDto,
             @RequestBody RouteForm routeForm
     ) {
-        routeService.createRoute(new RouteDto(UserDto.getSeq(), routeForm));
+        routeService.createRoute(UserDto.getSeq(), routeForm);
     }
 
     @GetMapping
@@ -37,14 +37,14 @@ public class RouteController {
         return ResponseEntity.ok(userRouteInfoResponses);
     }
 
-    @PutMapping("/{routeSeq}")
+    @PostMapping("/{routeSeq}")
     @ResponseStatus(HttpStatus.OK)
     public void updateRoute(
-            @SessionAttribute(SessionConst.USER) UserDto UserDto,
+            @SessionAttribute(SessionConst.USER) UserDto userDto,
             @PathVariable Integer routeSeq,
-            @RequestBody RouteForm routeForm
+            @ModelAttribute RouteForm routeForm
     ) {
-        routeService.updateRoute(new RouteDto(routeSeq, UserDto.getSeq(), routeForm));
+        routeService.updateRoute(routeSeq, userDto.getSeq(), routeForm);
     }
 
     @DeleteMapping("/{routeSeq}")

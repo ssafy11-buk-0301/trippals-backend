@@ -3,6 +3,7 @@ package com.ssafy.trippals.route.dto;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
+import org.springframework.web.multipart.MultipartFile;
 
 import java.time.LocalDateTime;
 
@@ -12,6 +13,6 @@ import java.time.LocalDateTime;
 public class RouteForm {
     private String name;
     private String overview;
-    private String thumbnail;
+    private MultipartFile thumbnail;
     private LocalDateTime startDate;
 }
