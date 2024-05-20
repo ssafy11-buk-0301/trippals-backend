@@ -1,13 +1,19 @@
 package com.ssafy.trippals.user.service;
 
+import com.ssafy.trippals.common.exception.FileUploadFailException;
 import com.ssafy.trippals.common.exception.UserAlreadyExistsException;
 import com.ssafy.trippals.common.exception.UserAuthException;
+import com.ssafy.trippals.common.file.FileUploadService;
+import com.ssafy.trippals.common.file.UploadedFile;
 import com.ssafy.trippals.user.dao.UserDao;
 import com.ssafy.trippals.user.dto.UserDto;
 import lombok.RequiredArgsConstructor;
+import org.apache.tomcat.util.http.fileupload.FileUploadException;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.web.multipart.MultipartFile;
 
+import java.io.IOException;
 import java.util.Optional;
 
 @Service
@@ -15,6 +21,7 @@ import java.util.Optional;
 @RequiredArgsConstructor
 public class UserServiceImpl implements UserService {
     private final UserDao userDao;
+    private final FileUploadService fileUploadService;
 
     @Override
     public Optional<UserDto> login(String email, String password) {
@@ -44,7 +51,18 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
-    public Optional<UserDto> updateUser(UserDto userDto) {
+    public Optional<UserDto> updateUser(UserDto userDto, MultipartFile profileImage) {
+        if (profileImage != null) {
+            UploadedFile uploadedFile = null;
+            try {
+                fileUploadService.deleteImage(userDto.getProfileImage());
+                uploadedFile = fileUploadService.uploadImage(profileImage);
+            } catch (IOException e) {
+                throw new FileUploadFailException(e);
+            }
+
+            userDto.setProfileImage(uploadedFile.getFileUUID());
+        }
         userDao.updateUser(userDto);
         return getUser(userDto.getEmail());
     }

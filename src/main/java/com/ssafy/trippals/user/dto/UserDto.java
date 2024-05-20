@@ -31,10 +31,4 @@ public class UserDto {
         this.password = signUpForm.getPassword();
         this.email = signUpForm.getEmail();
     }
-
-    public UserDto(Integer seq, UserUpdateForm userUpdateForm) {
-        this.seq = seq;
-        this.name = userUpdateForm.getName();
-        this.profileImage = userUpdateForm.getProfileImage();
-    }
 }

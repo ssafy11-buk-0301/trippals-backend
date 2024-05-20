@@ -113,7 +113,7 @@ public class BoardServiceImpl implements BoardService{
 
                 int boardSeq = dto.getSeq();
 
-                UploadedFile uploaded = fileUploadService.upload(part);
+                UploadedFile uploaded = fileUploadService.uploadFile(part);
 
                 rollbackFileList.add(uploaded.getSaveFile());
 
@@ -166,7 +166,7 @@ public class BoardServiceImpl implements BoardService{
             for (MultipartFile part : fileList) {
                 int boardSeq = dto.getSeq();
 
-                UploadedFile uploaded = fileUploadService.upload(part);
+                UploadedFile uploaded = fileUploadService.uploadFile(part);
                 rollbackFileList.add(uploaded.getSaveFile());
 
                 // Table Insert

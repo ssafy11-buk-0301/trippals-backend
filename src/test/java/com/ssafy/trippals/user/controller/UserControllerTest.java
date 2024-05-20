@@ -77,7 +77,7 @@ class UserControllerTest {
         UserDto expected = new UserDto(1, "test2", "test2", "test", null, null);
         MockHttpSession session = new MockHttpSession();
         session.setAttribute(SessionConst.USER, userInfo);
-        when(userService.updateUser(any()))
+        when(userService.updateUser(any(),any()))
                 .thenReturn(Optional.of(expected));
         MultiValueMap<String, String> params = new LinkedMultiValueMap<>();
         params.add("name", expected.getName());
