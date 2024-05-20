@@ -35,8 +35,8 @@ public class BoardController {
     public ResponseEntity<BoardResultDto> boardList(BoardParamDto boardParamDto){
 
         BoardResultDto boardResultDto;
-
-        if( boardParamDto.getSearchWord()==null ) {
+//        System.out.println(boardParamDto);
+        if( boardParamDto.getSearchWord()==null || boardParamDto.getSearchWord().isEmpty()) {
             boardResultDto = service.boardList(boardParamDto);
         }else {
             boardResultDto = service.boardListSearchWord(boardParamDto);
@@ -50,12 +50,17 @@ public class BoardController {
     public BoardResultDto boardDetail(@PathVariable("boardSeq") int boardSeq, HttpSession session){
 
         BoardParamDto boardParamDto = new BoardParamDto();
-        boardParamDto.setUserSeq( ((UserDto) session.getAttribute(SessionConst.USER)).getSeq());
         boardParamDto.setBoardSeq(boardSeq);
+        System.out.println(boardParamDto);
+//        int userSeq=((UserDto) session.getAttribute(SessionConst.USER)).getSeq();
+
+        int userSeq=1;//testCode
+        boardParamDto.setUserSeq(userSeq);
+        boardParamDto.setUserSeq(1);//test
 
         BoardResultDto boardResultDto = service.boardDetail(boardParamDto);
         // 게시글 작성자와 현 사용자가 동일
-        if( ((UserDto) session.getAttribute(SessionConst.USER)).getSeq() == boardResultDto.getDto().getUserSeq() ) {
+        if( userSeq == boardResultDto.getDto().getUserSeq() ) {
             boardResultDto.getDto().setSameUser(true);
         }
 

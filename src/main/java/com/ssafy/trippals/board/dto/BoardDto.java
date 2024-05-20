@@ -18,6 +18,8 @@ public class BoardDto {
     private LocalDateTime regDt;
     private boolean isDraft;
     private Integer routeSeq;
+    private int readCount;
+    private String writer;
     private List<BoardFileDto> fileList;
     private boolean sameUser;
 }
