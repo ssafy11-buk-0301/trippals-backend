@@ -49,13 +49,14 @@ public class RouteServiceImpl implements RouteService {
 
     @Override
     public void updateRoute(int seq, int owner, RouteForm routeForm) {
-        routeDao.findRouteDtoBySeq(seq)
+        RouteDto routeDto = routeDao.findRouteDtoBySeq(seq)
                 .filter(r -> r.getOwner().equals(owner))
                 .orElseThrow(UserAuthException::new);
 
         String fileUUID = null;
         if (routeForm.getThumbnail() != null) {
             try {
+                fileUploadService.deleteImage(routeDto.getThumbnail());
                 UploadedFile uploadedFile = fileUploadService.uploadImage(routeForm.getThumbnail());
                 fileUUID = uploadedFile.getFileUUID();
             } catch (IOException e) {
@@ -63,7 +64,7 @@ public class RouteServiceImpl implements RouteService {
             }
         }
 
-        RouteDto routeDto =
+        routeDto =
             new RouteDto(seq, owner, routeForm.getName(), routeForm.getOverview(), fileUUID, routeForm.getStartDate());
 
         routeDao.updateRoute(routeDto);
