@@ -4,7 +4,7 @@
     <!--  BoardParams(limit,offset,SearchWord)로 Select  -->
     <!--orderBy 프론트에서 기본값 제공-->
     <select id="findBoard" parameterType="BoardParamDto" resultType="BoardDto">
-        select  b.seq, b.user_seq, b.title, b.content, b.reg_dt, b.read_count, b.is_draft, b.route_seq
+        select  b.seq, b.user_seq, b.title, b.content, b.reg_dt, b.read_count, b.is_draft, b.route_seq,u.name writer
         from board b
         inner join users u on b.user_seq = u.seq
         where b.is_draft = 0
@@ -51,7 +51,7 @@
         from board b, users u
         where b.user_seq = u.seq
           and b.title like concat('%', #{searchWord} ,'%') and b.is_draft=0
-        order by #{orderBy} #{ascDesc}
+        order by ${orderBy} ${ascDesc}
             limit #{limit} offset #{offset}
     </select>
 
@@ -105,7 +105,7 @@
 
     <update id="boardReadCountUpdate" parameterType="int">
         update board set read_count = read_count + 1
-        where board_seq = #{boardSeq}
+        where seq = #{boardSeq}
     </update>
 
     <update id="boardReadCountDelete" parameterType="int">
