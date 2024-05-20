@@ -5,9 +5,10 @@ import com.ssafy.trippals.board.dto.BoardDto;
 import com.ssafy.trippals.board.dto.BoardFileDto;
 import com.ssafy.trippals.board.dto.BoardParamDto;
 import com.ssafy.trippals.board.dto.BoardResultDto;
+import com.ssafy.trippals.common.file.FileUploadService;
+import com.ssafy.trippals.common.file.UploadedFile;
 import lombok.RequiredArgsConstructor;
 import org.apache.commons.io.FilenameUtils;
-import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.multipart.MultipartFile;
@@ -23,10 +24,7 @@ import java.util.UUID;
 public class BoardServiceImpl implements BoardService{
 
     private final BoardDao dao;
-
-    //물리적 파일저장 위치
-    @Value("${app.fileupload.upload.path}")
-    String uploadPath;
+    private final FileUploadService fileUploadService;
 
     private static final String SUCCESS = "success";
     private static final String FAIL = "fail";
@@ -111,36 +109,21 @@ public class BoardServiceImpl implements BoardService{
 
             List<MultipartFile> fileList = request.getFiles("file");
 
-            File uploadDir = new File(uploadPath);
-            if (!uploadDir.exists()) uploadDir.mkdir();
-
             for (MultipartFile part : fileList) {
 
                 int boardSeq = dto.getSeq();
 
-                String fileName = part.getOriginalFilename();
+                UploadedFile uploaded = fileUploadService.uploadFile(part);
 
-                //Random File Id
-                UUID uuid = UUID.randomUUID();
-
-                //file extension
-                String extension = FilenameUtils.getExtension(fileName); // vs FilenameUtils.getBaseName()
-
-                String fileUUID = uuid + "." + extension;
-
-                File saveFile = new File(uploadPath + File.separator + fileUUID);
-
-                rollbackFileList.add(saveFile);
-
-                part.transferTo(saveFile);//물리 파일 저장
+                rollbackFileList.add(uploaded.getSaveFile());
 
                 // Table Insert
                 BoardFileDto boardFileDto = new BoardFileDto();
                 boardFileDto.setBoardSeq(boardSeq);
-                boardFileDto.setFileName(fileName);
+                boardFileDto.setFileName(uploaded.getFileName());
                 boardFileDto.setFileSize(part.getSize());
                 boardFileDto.setFileContentType(part.getContentType());
-                boardFileDto.setFileUUID(fileUUID);
+                boardFileDto.setFileUUID(uploaded.getFileUUID());
 
                 dao.boardFileInsert(boardFileDto);
             }
@@ -171,18 +154,11 @@ public class BoardServiceImpl implements BoardService{
         try {
             dao.updateBoard(dto);
 
-            //
             List<MultipartFile> fileList = request.getFiles("file");
-
-            File uploadDir = new File(uploadPath);
-            if (!uploadDir.exists()) uploadDir.mkdir();
 
             List<String> fileDeleteList = dao.boardFileDeleteList(dto.getSeq());
             for(String fileUUID : fileDeleteList) {
-                File file = new File(uploadPath + File.separator + fileUUID);
-                if(file.exists()) {
-                    file.delete();
-                }
+                fileUploadService.deleteFile(fileUUID);
             }
 
             dao.boardFileDelete(dto.getSeq());
@@ -190,28 +166,16 @@ public class BoardServiceImpl implements BoardService{
             for (MultipartFile part : fileList) {
                 int boardSeq = dto.getSeq();
 
-                String fileName = part.getOriginalFilename();
-
-                //Random File Id
-                UUID uuid = UUID.randomUUID();
-
-                //file extension
-                String extension = FilenameUtils.getExtension(fileName); // vs FilenameUtils.getBaseName()
-                String fileUUID = uuid + "." + extension;
-
-                File saveFile = new File(uploadPath + File.separator + fileUUID);
-
-                rollbackFileList.add(saveFile);
-
-                part.transferTo(saveFile);
+                UploadedFile uploaded = fileUploadService.uploadFile(part);
+                rollbackFileList.add(uploaded.getSaveFile());
 
                 // Table Insert
                 BoardFileDto boardFileDto = new BoardFileDto();
                 boardFileDto.setBoardSeq(boardSeq);
-                boardFileDto.setFileName(fileName);
+                boardFileDto.setFileName(uploaded.getFileName());
                 boardFileDto.setFileSize(part.getSize());
                 boardFileDto.setFileContentType(part.getContentType());
-                boardFileDto.setFileUUID(fileUUID);
+                boardFileDto.setFileUUID(uploaded.getFileUUID());
 
                 dao.boardFileInsert(boardFileDto);
             }
@@ -249,10 +213,7 @@ public class BoardServiceImpl implements BoardService{
 
 
             for(String fileUUID : fileDeleteList) {
-                File file = new File(uploadPath + File.separator + fileUUID);
-                if(file.exists()) {
-                    file.delete();
-                }
+                fileUploadService.deleteFile(fileUUID);
             }
 
         }catch(Exception e) {

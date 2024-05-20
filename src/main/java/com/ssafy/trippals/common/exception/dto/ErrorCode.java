@@ -5,7 +5,8 @@ import lombok.Getter;
 @Getter
 public enum ErrorCode {
     LOGIN_FAIL(101), UNAUTHORIZED(102), USER_NOT_FOUND(103), USER_ALREADY_EXIST(104),
-    ROUTE_LIMIT_EXCEEDED(201);
+    ROUTE_LIMIT_EXCEEDED(201),
+    FILE_UPLOAD_FAIL(501),;
 
     private final int code;
 

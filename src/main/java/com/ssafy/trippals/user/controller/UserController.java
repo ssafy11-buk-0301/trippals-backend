@@ -38,16 +38,17 @@ public class UserController {
                 .orElseThrow(UserNotFoundException::new);
     }
 
-    @PutMapping
+    @PostMapping
     public ResponseEntity<UserDto> updateUser(
             @SessionAttribute(value = SessionConst.USER, required = false) UserDto userDto,
-            @RequestBody UserUpdateForm userUpdateForm
+            @ModelAttribute UserUpdateForm userUpdateForm
     ) {
         if (userDto == null) {
             throw new UserAuthException();
         }
-
-        Optional<UserDto> optionalUserDto = userService.updateUser(new UserDto(userDto.getSeq(), userUpdateForm));
+        userDto.setName(userUpdateForm.getName());
+        Optional<UserDto> optionalUserDto =
+                userService.updateUser(userDto, userUpdateForm.getProfileImage());
 
         return optionalUserDto
                 .map(ResponseEntity::ok)

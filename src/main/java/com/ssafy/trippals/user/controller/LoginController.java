@@ -7,11 +7,9 @@ import com.ssafy.trippals.user.dto.UserDto;
 import com.ssafy.trippals.user.service.UserService;
 import jakarta.servlet.http.HttpSession;
 import lombok.RequiredArgsConstructor;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.ModelAttribute;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import java.util.Optional;
 
@@ -28,6 +26,12 @@ public class LoginController {
                 .map(u -> setSession(session, u))
                 .map(ResponseEntity::ok)
                 .orElseThrow(LoginException::new);
+    }
+
+    @PostMapping("/logout")
+    @ResponseStatus(HttpStatus.OK)
+    public void logout(HttpSession session) {
+        session.invalidate();
     }
 
     private UserDto setSession(HttpSession session, UserDto userDto) {
