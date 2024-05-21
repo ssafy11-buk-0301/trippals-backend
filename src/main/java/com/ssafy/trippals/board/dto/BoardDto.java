@@ -17,9 +17,14 @@ public class BoardDto {
     private String content;
     private LocalDateTime regDt;
     private boolean isDraft;
-    private Integer routeSeq;
     private int readCount;
     private String writer;
     private List<BoardFileDto> fileList;
     private boolean sameUser;
+
+    private Integer routeSeq;
+    private String routeName;
+    private String thumbnail;
+    private String overview;
+    private String startDate;
 }
