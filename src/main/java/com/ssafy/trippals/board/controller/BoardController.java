@@ -78,6 +78,7 @@ public class BoardController {
         boardDto.setUserSeq( userSeq);
         System.out.println(boardDto);
 
+//        if("undefined".equals(boardDto.getRouteSeq())) boardDto.setRouteSeq(null);
         BoardResultDto boardResultDto = service.boardInsert(boardDto, request);
 
         return boardResultDto;

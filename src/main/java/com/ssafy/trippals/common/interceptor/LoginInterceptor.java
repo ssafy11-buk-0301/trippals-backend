@@ -1,12 +1,8 @@
 package com.ssafy.trippals.common.interceptor;
 
-import com.ssafy.trippals.SessionConst;
-import com.ssafy.trippals.common.exception.UserAuthException;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
-import jakarta.servlet.http.HttpSession;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.http.HttpMethod;
 import org.springframework.stereotype.Component;
 import org.springframework.web.servlet.HandlerInterceptor;
 
