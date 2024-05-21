@@ -4,6 +4,7 @@ import com.ssafy.trippals.SessionConst;
 import com.ssafy.trippals.common.page.dto.PageParams;
 import com.ssafy.trippals.common.page.dto.PageResponse;
 import com.ssafy.trippals.route.dto.RouteDto;
+import com.ssafy.trippals.route.dto.RouteEditorRequestDto;
 import com.ssafy.trippals.route.service.RouteEditorService;
 import com.ssafy.trippals.user.dto.UserDto;
 import lombok.RequiredArgsConstructor;
@@ -26,16 +27,6 @@ public class RouteEditorController {
         return ResponseEntity.ok(routeEditorService.findAllEditors(userDto.getSeq(), routeSeq));
     }
 
-    @PostMapping("/routes/{routeSeq}/editors")
-    @ResponseStatus(HttpStatus.OK)
-    public void addRouteEditor(
-            @SessionAttribute(SessionConst.USER) UserDto userDto,
-            @PathVariable("routeSeq") int routeSeq,
-            @RequestParam("editorSeq") Integer editorSeq
-    ) {
-        routeEditorService.addEditor(routeSeq, userDto.getSeq(), editorSeq);
-    }
-
     @DeleteMapping("/routes/{routeSeq}/editors")
     @ResponseStatus(HttpStatus.OK)
     public void deleteRouteEditor(
@@ -52,5 +43,42 @@ public class RouteEditorController {
             @ModelAttribute PageParams pageParams
     ) {
         return ResponseEntity.ok(routeEditorService.findAllEditableRoutes(userDto.getSeq(), pageParams));
+    }
+
+    @GetMapping("/editors/requests")
+    public ResponseEntity<List<RouteEditorRequestDto>> getRequest(
+            @SessionAttribute(SessionConst.USER) UserDto userDto
+    ) {
+        return ResponseEntity.ok(routeEditorService.findAllRequests(userDto.getSeq()));
+    }
+
+    @PostMapping("/routes/{routeSeq}/editors")
+    @ResponseStatus(HttpStatus.OK)
+    public void addRouteEditorRequest(
+            @SessionAttribute(SessionConst.USER) UserDto userDto,
+            @PathVariable("routeSeq") int routeSeq,
+            @RequestParam("editorSeq") Integer editorSeq
+    ) {
+        routeEditorService.addRequest(routeSeq, userDto.getSeq(), editorSeq);
+    }
+
+    @PostMapping("/routes/{routeSeq}/editors/confirm")
+    @ResponseStatus(HttpStatus.OK)
+    public void confirmRouteEditorRequest(
+            @SessionAttribute(SessionConst.USER) UserDto userDto,
+            @PathVariable("routeSeq") int routeSeq,
+            @RequestParam("editorSeq") Integer editorSeq
+    ) {
+        routeEditorService.confirmRequest(routeSeq, userDto.getSeq(), editorSeq);
+    }
+
+    @PostMapping("/routes/{routeSeq}/editors/reject")
+    @ResponseStatus(HttpStatus.OK)
+    public void rejectRouteEditorRequest(
+            @SessionAttribute(SessionConst.USER) UserDto userDto,
+            @PathVariable("routeSeq") int routeSeq,
+            @RequestParam("editorSeq") Integer editorSeq
+    ) {
+        routeEditorService.rejectRequest(routeSeq, userDto.getSeq(), editorSeq);
     }
 }

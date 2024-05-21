@@ -1,5 +1,6 @@
 package com.ssafy.trippals.route.service;
 
+import com.ssafy.trippals.attraction.dto.RouteAttractionDto;
 import com.ssafy.trippals.common.exception.UserAuthException;
 import com.ssafy.trippals.common.page.dto.PageParams;
 import com.ssafy.trippals.common.page.dto.PageResponse;
@@ -7,12 +8,14 @@ import com.ssafy.trippals.route.dao.RouteDao;
 import com.ssafy.trippals.route.dao.RouteEditorDao;
 import com.ssafy.trippals.route.dto.RouteDto;
 import com.ssafy.trippals.route.dto.RouteEditorDto;
+import com.ssafy.trippals.route.dto.RouteEditorRequestDto;
 import com.ssafy.trippals.user.dto.UserDto;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
+import java.util.Optional;
 
 @Service
 @Transactional
@@ -51,6 +54,52 @@ public class RouteEditorServiceImpl implements RouteEditorService {
         int modified = routeEditorDao.deleteRouteEditor(routeSeq, editor);
 
         return modified == 1;
+    }
+
+    @Override
+    public List<RouteEditorRequestDto> findAllRequests(int userSeq) {
+        return routeEditorDao.findRequestByUserSeq(userSeq);
+    }
+
+    @Override
+    public boolean addRequest(int routeSeq, int owner, int editor) {
+        if (!isOwner(routeSeq, owner)) throw new UserAuthException();
+
+        return 1 == routeEditorDao.insertRouteEditorRequest(new RouteEditorRequestDto(routeSeq, editor));
+    }
+
+    @Override
+    public boolean confirmRequest(int routeSeq, int userSeq, int editor) {
+        if (userSeq != editor) throw new UserAuthException();
+
+        List<RouteEditorRequestDto> requestList = routeEditorDao.findRequestByUserSeq(userSeq);
+
+        requestList.stream()
+                .filter(r -> r.getRouteSeq() == routeSeq)
+                .limit(1)
+                .peek(r -> routeEditorDao.deleteRouteEditorRequest(r.getSeq()))
+                .map(r -> new RouteEditorDto(routeSeq, editor))
+                .peek(routeEditorDao::insertRouteEditor)
+                .findAny()
+                .orElseThrow(UserAuthException::new);
+
+        return true;
+    }
+
+    @Override
+    public boolean rejectRequest(int routeSeq, int userSeq, int editor) {
+        if (userSeq != editor) throw new UserAuthException();
+
+        List<RouteEditorRequestDto> requestList = routeEditorDao.findRequestByUserSeq(userSeq);
+
+        requestList.stream()
+                .filter(r -> r.getRouteSeq() == routeSeq)
+                .limit(1)
+                .peek(r -> routeEditorDao.deleteRouteEditorRequest(r.getSeq()))
+                .findAny()
+                .orElseThrow(UserAuthException::new);
+
+        return true;
     }
 
     @Override
