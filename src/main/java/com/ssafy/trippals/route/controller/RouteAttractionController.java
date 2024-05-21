@@ -23,7 +23,7 @@ public class RouteAttractionController {
     @GetMapping("/attractions")
     public ResponseEntity<List<AttractionDto>> getRouteAttractions(
             @SessionAttribute(SessionConst.USER) UserDto UserDto,
-            @PathVariable int routeSeq
+            @PathVariable("routeSeq") int routeSeq
     ) {
         return ResponseEntity.ok(routeAttractionService.getRouteAttractions(UserDto.getSeq(), routeSeq));
     }
@@ -32,7 +32,7 @@ public class RouteAttractionController {
     @ResponseStatus(HttpStatus.OK)
     public void addRouteAttraction(
             @SessionAttribute(SessionConst.USER) UserDto UserDto,
-            @PathVariable int routeSeq, @PathVariable int contentId
+            @PathVariable("routeSeq") int routeSeq, @PathVariable("contentId") int contentId
     ) {
         routeAttractionService.addRouteAttraction(UserDto.getSeq(), routeSeq, contentId);
     }
@@ -41,7 +41,7 @@ public class RouteAttractionController {
     @ResponseStatus(HttpStatus.OK)
     public void deleteRouteAttraction(
             @SessionAttribute(SessionConst.USER) UserDto UserDto,
-            @PathVariable int routeSeq, @PathVariable int contentId
+            @PathVariable("routeSeq") int routeSeq, @PathVariable("contentId") int contentId
     ) {
         routeAttractionService.deleteRouteAttraction(UserDto.getSeq(), routeSeq, contentId);
     }
@@ -50,14 +50,14 @@ public class RouteAttractionController {
     @ResponseStatus(HttpStatus.OK)
     public void changeRouteAttractionOrder(
             @SessionAttribute(SessionConst.USER) UserDto UserDto,
-            @PathVariable int routeSeq, @PathVariable int from, @PathVariable int to
+            @PathVariable("routeSeq") int routeSeq, @PathVariable("from") int from, @PathVariable("to") int to
     ) {
         routeAttractionService.changeRouteAttraction(UserDto.getSeq(), routeSeq, from, to);
     }
 
     @GetMapping("/nearby-attractions")
     public ResponseEntity<PageResponse<AttractionDto>> getNearbyAttractions(
-            @SessionAttribute(SessionConst.USER) UserDto UserDto, @PathVariable int routeSeq,
+            @SessionAttribute(SessionConst.USER) UserDto UserDto, @PathVariable("routeSeq") int routeSeq,
             @ModelAttribute NearByAttractionContentTypeParams params
     ) {
         PageResponse<AttractionDto> pageResponse =
