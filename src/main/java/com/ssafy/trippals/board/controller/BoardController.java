@@ -22,7 +22,7 @@ import java.util.List;
 public class BoardController {
     private final BoardService service;
     private final BookmarkService bookmarkService;
-
+    int userSeq=1;//testCode
     @GetMapping(value="/users/bookmarks")
     public ResponseEntity<List<BoardDto>> boardListByUser(HttpSession session){
 
@@ -54,9 +54,8 @@ public class BoardController {
         System.out.println(boardParamDto);
 //        int userSeq=((UserDto) session.getAttribute(SessionConst.USER)).getSeq();
 
-        int userSeq=1;//testCode
+
         boardParamDto.setUserSeq(userSeq);
-        boardParamDto.setUserSeq(1);//test
 
         BoardResultDto boardResultDto = service.boardDetail(boardParamDto);
         // 게시글 작성자와 현 사용자가 동일
@@ -75,7 +74,9 @@ public class BoardController {
             BoardDto boardDto,
             MultipartHttpServletRequest request) {
 
-        boardDto.setUserSeq( ((UserDto) request.getSession().getAttribute(SessionConst.USER)).getSeq());
+//        boardDto.setUserSeq( ((UserDto) request.getSession().getAttribute(SessionConst.USER)).getSeq());
+        boardDto.setUserSeq( userSeq);
+        System.out.println(boardDto);
 
         BoardResultDto boardResultDto = service.boardInsert(boardDto, request);
 
@@ -91,7 +92,8 @@ public class BoardController {
     public BoardResultDto boardUpdate(
             BoardDto boardDto,
             MultipartHttpServletRequest request){
-        boardDto.setUserSeq( ((UserDto) request.getSession().getAttribute(SessionConst.USER)).getSeq());
+//        boardDto.setUserSeq( ((UserDto) request.getSession().getAttribute(SessionConst.USER)).getSeq());
+        boardDto.setUserSeq( userSeq);
         BoardResultDto boardResultDto = service.boardUpdate(boardDto, request);
 
         return boardResultDto;
@@ -118,8 +120,9 @@ public class BoardController {
 
     @DeleteMapping(value="/boards/{boardSeq}")
     public BoardResultDto boardDelete(@PathVariable(value="boardSeq") int boardSeq,HttpSession session){
-        UserDto userDto=(UserDto) session.getAttribute(SessionConst.USER);
-        BoardResultDto boardResultDto = service.boardDelete(boardSeq, userDto.getSeq());
+//        UserDto userDto=(UserDto) session.getAttribute(SessionConst.USER);
+//        BoardResultDto boardResultDto = service.boardDelete(boardSeq, userDto.getSeq());
+        BoardResultDto boardResultDto = service.boardDelete(boardSeq, userSeq);
 
         return boardResultDto;
     }
