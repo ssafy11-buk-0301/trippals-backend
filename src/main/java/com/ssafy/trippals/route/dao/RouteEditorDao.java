@@ -21,5 +21,5 @@ public interface RouteEditorDao {
     List<UserDto> findEditorByRouteSeq(@Param("routeSeq") int routeSeq);
 
     int insertRouteEditor(RouteEditorDto routeEditorDto);
-    int deleteRouteEditor(@Param("seq") int seq);
+    int deleteRouteEditor(@Param("routeSeq") int routeSeq, @Param("editor") int editor);
 }

@@ -48,7 +48,7 @@ public class RouteEditorServiceImpl implements RouteEditorService {
     public boolean removeEditor(int routeSeq, int owner, int editor) {
         if (!isOwner(routeSeq, owner)) throw new UserAuthException();
 
-        int modified = routeEditorDao.deleteRouteEditor(editor);
+        int modified = routeEditorDao.deleteRouteEditor(routeSeq, editor);
 
         return modified == 1;
     }

@@ -31,7 +31,7 @@ public class RouteEditorController {
     public void addRouteEditor(
             @SessionAttribute(SessionConst.USER) UserDto userDto,
             @PathVariable("routeSeq") int routeSeq,
-            @RequestBody Integer editorSeq
+            @RequestParam("editorSeq") Integer editorSeq
     ) {
         routeEditorService.addEditor(routeSeq, userDto.getSeq(), editorSeq);
     }
@@ -41,7 +41,7 @@ public class RouteEditorController {
     public void deleteRouteEditor(
             @SessionAttribute(SessionConst.USER) UserDto userDto,
             @PathVariable("routeSeq") int routeSeq,
-            @RequestBody Integer editorSeq
+            @RequestParam("editorSeq") Integer editorSeq
     ) {
         routeEditorService.removeEditor(routeSeq, userDto.getSeq(), editorSeq);
     }

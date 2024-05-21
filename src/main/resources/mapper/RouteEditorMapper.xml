@@ -41,9 +41,9 @@
 
     <!--  여행 경로의 편집자 조회  -->
     <select id="findEditorByRouteSeq" resultType="com.ssafy.trippals.user.dto.UserDto">
-        select  r.seq, name, email, profile_image, register_date
+        select  u.seq, name, email, profile_image, register_date
         from    users u, route_editors re
-        where   u.seq = re.user_seq
+        where   u.seq = re.editor
         and     re.route_seq = #{routeSeq};
     </select>
 
@@ -51,13 +51,14 @@
     <insert id="insertRouteEditor"
             parameterType="routeEditorDto"
             useGeneratedKeys="true" keyColumn="seq">
-        insert into route_editors(user_seq, route_seq)
+        insert into route_editors(editor, route_seq)
         values (#{editor}, #{routeSeq});
     </insert>
 
     <!--  여행 경로에서 편집자 삭제  -->
     <delete id="deleteRouteEditor">
         delete from route_editors
-        where   seq = #{seq};
+        where   editor = #{editor}
+        and     route_seq = #{routeSeq};
     </delete>
 </mapper>
