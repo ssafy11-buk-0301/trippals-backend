@@ -27,9 +27,9 @@ public class PageResponse<T> {
     }
 
     private void setPageAndSize(int offset, int limit, int totalContents, int size) {
-        this.page = limit == 0 ? 1 : (offset / limit) + 1;
+        this.page = limit <= 0 ? 1 : (offset / limit) + 1;
         this.totalContents = totalContents;
         this.size = size;
-        this.totalPage = (int) Math.ceil((double) totalContents / limit);
+        this.totalPage = limit <= 0 || totalContents == 0 ? 1 : (int) Math.ceil((double) totalContents / limit);
     }
 }
