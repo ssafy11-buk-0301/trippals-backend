@@ -1,6 +1,7 @@
 package com.ssafy.trippals.route.service;
 
 import com.ssafy.trippals.attraction.dto.RouteAttractionDto;
+import com.ssafy.trippals.common.exception.UserAlreadyExistsException;
 import com.ssafy.trippals.common.exception.UserAuthException;
 import com.ssafy.trippals.common.page.dto.PageParams;
 import com.ssafy.trippals.common.page.dto.PageResponse;
@@ -65,12 +66,14 @@ public class RouteEditorServiceImpl implements RouteEditorService {
     public boolean addRequest(int routeSeq, int owner, int editor) {
         if (!isOwner(routeSeq, owner)) throw new UserAuthException();
 
+        if (canEdit(routeSeq, editor)) throw new UserAlreadyExistsException();
+
         return 1 == routeEditorDao.insertRouteEditorRequest(new RouteEditorRequestDto(routeSeq, editor));
     }
 
     @Override
-    public boolean confirmRequest(int routeSeq, int userSeq, int editor) {
-        if (userSeq != editor) throw new UserAuthException();
+    public boolean confirmRequest(int routeSeq, int userSeq) {
+        if (canEdit(routeSeq, userSeq)) throw new UserAlreadyExistsException();
 
         List<RouteEditorRequestDto> requestList = routeEditorDao.findRequestByUserSeq(userSeq);
 
@@ -78,7 +81,7 @@ public class RouteEditorServiceImpl implements RouteEditorService {
                 .filter(r -> r.getRouteSeq() == routeSeq)
                 .limit(1)
                 .peek(r -> routeEditorDao.deleteRouteEditorRequest(r.getSeq()))
-                .map(r -> new RouteEditorDto(routeSeq, editor))
+                .map(r -> new RouteEditorDto(routeSeq, userSeq))
                 .peek(routeEditorDao::insertRouteEditor)
                 .findAny()
                 .orElseThrow(UserAuthException::new);
@@ -87,8 +90,8 @@ public class RouteEditorServiceImpl implements RouteEditorService {
     }
 
     @Override
-    public boolean rejectRequest(int routeSeq, int userSeq, int editor) {
-        if (userSeq != editor) throw new UserAuthException();
+    public boolean rejectRequest(int routeSeq, int userSeq) {
+        if (canEdit(routeSeq, userSeq)) throw new UserAlreadyExistsException();
 
         List<RouteEditorRequestDto> requestList = routeEditorDao.findRequestByUserSeq(userSeq);
 

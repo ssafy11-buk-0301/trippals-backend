@@ -66,19 +66,17 @@ public class RouteEditorController {
     @ResponseStatus(HttpStatus.OK)
     public void confirmRouteEditorRequest(
             @SessionAttribute(SessionConst.USER) UserDto userDto,
-            @PathVariable("routeSeq") int routeSeq,
-            @RequestParam("editorSeq") Integer editorSeq
+            @PathVariable("routeSeq") int routeSeq
     ) {
-        routeEditorService.confirmRequest(routeSeq, userDto.getSeq(), editorSeq);
+        routeEditorService.confirmRequest(routeSeq, userDto.getSeq());
     }
 
     @PostMapping("/routes/{routeSeq}/editors/reject")
     @ResponseStatus(HttpStatus.OK)
     public void rejectRouteEditorRequest(
             @SessionAttribute(SessionConst.USER) UserDto userDto,
-            @PathVariable("routeSeq") int routeSeq,
-            @RequestParam("editorSeq") Integer editorSeq
+            @PathVariable("routeSeq") int routeSeq
     ) {
-        routeEditorService.rejectRequest(routeSeq, userDto.getSeq(), editorSeq);
+        routeEditorService.rejectRequest(routeSeq, userDto.getSeq());
     }
 }

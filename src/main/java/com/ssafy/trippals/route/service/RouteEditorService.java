@@ -16,8 +16,8 @@ public interface RouteEditorService {
 
     List<RouteEditorRequestDto> findAllRequests(int userSeq);
     boolean addRequest(int routeSeq, int owner, int editor);
-    boolean confirmRequest(int routeSeq, int userSeq, int editor);
-    boolean rejectRequest(int routeSeq, int userSeq, int editor);
+    boolean confirmRequest(int routeSeq, int userSeq);
+    boolean rejectRequest(int routeSeq, int userSeq);
 
     boolean canEdit(int routeSeq, int userSeq);
     boolean isEditor(int routeSeq, int userSeq);

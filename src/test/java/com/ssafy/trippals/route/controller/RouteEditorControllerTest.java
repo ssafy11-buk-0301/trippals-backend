@@ -7,6 +7,7 @@ import com.ssafy.trippals.route.dao.RouteDao;
 import com.ssafy.trippals.route.dao.RouteEditorDao;
 import com.ssafy.trippals.route.dto.RouteDto;
 import com.ssafy.trippals.route.dto.RouteEditorDto;
+import com.ssafy.trippals.route.dto.RouteEditorRequestDto;
 import com.ssafy.trippals.user.dao.UserDao;
 import com.ssafy.trippals.user.dto.UserDto;
 import org.junit.jupiter.api.BeforeEach;
@@ -21,10 +22,8 @@ import org.springframework.transaction.annotation.Transactional;
 import java.time.LocalDate;
 import java.util.List;
 
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.delete;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.content;
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
 
 @SpringBootTest
 @Transactional
@@ -95,5 +94,57 @@ class RouteEditorControllerTest {
                 .session(session)
         ).andExpect(status().isOk())
         .andExpect(content().json(objectMapper.writeValueAsString(expected)));
+    }
+
+    @Test
+    void makeRequest() throws Exception {
+        // given
+        UserDto owner = users.get(0);
+        UserDto editor = users.get(1);
+        UserDto none = users.get(2);
+
+        MockHttpSession session = new MockHttpSession();
+        session.setAttribute(SessionConst.USER, owner);
+
+        // then
+        mvc.perform(
+                        post(String.format("/routes/%d/editors", route.getSeq()))
+                                .param("editorSeq", Integer.toString(editor.getSeq()))
+                                .session(session)
+                ).andExpect(status().isBadRequest())
+                .andExpect(jsonPath("$.errorCode").value("104"));
+
+        mvc.perform(
+                        post(String.format("/routes/%d/editors", route.getSeq()))
+                                .param("editorSeq", Integer.toString(none.getSeq()))
+                                .session(session)
+                ).andExpect(status().isOk());
+    }
+
+    @Test
+    void confirmOrReject() throws Exception {
+        // given
+        UserDto owner = users.get(0);
+        UserDto editor = users.get(1);
+        UserDto none = users.get(2);
+
+        MockHttpSession sessionNone = new MockHttpSession();
+        MockHttpSession sessionEditor = new MockHttpSession();
+        sessionNone.setAttribute(SessionConst.USER, none);
+        sessionEditor.setAttribute(SessionConst.USER, none);
+
+        routeEditorDao.insertRouteEditorRequest(new RouteEditorRequestDto(route.getSeq(), none.getSeq()));
+
+        // then
+        mvc.perform(
+                post(String.format("/routes/%d/editors/confirm", route.getSeq()))
+                        .session(sessionNone)
+        ).andExpect(status().isOk());
+
+        mvc.perform(
+                post(String.format("/routes/%d/editors/confirm", route.getSeq()))
+                        .session(sessionEditor)
+        ).andExpect(status().isBadRequest())
+        .andExpect(jsonPath("$.errorCode").value("104"));
     }
 }
