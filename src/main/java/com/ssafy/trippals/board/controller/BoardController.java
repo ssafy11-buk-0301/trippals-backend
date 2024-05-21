@@ -22,7 +22,7 @@ import java.util.List;
 public class BoardController {
     private final BoardService service;
     private final BookmarkService bookmarkService;
-    int userSeq=1;//testCode
+    int userSeq=5;//testCode
     @GetMapping(value="/users/bookmarks")
     public ResponseEntity<List<BoardDto>> boardListByUser(HttpSession session){
 
