@@ -16,6 +16,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.List;
 import java.util.Optional;
 
 @RestController
@@ -25,8 +26,8 @@ public class UserController {
     private final UserService userService;
     private final BookmarkService bookmarkService;
     @GetMapping
-    public ResponseEntity<UserDto> searchUser(@RequestParam("email") String email) {
-        return ResponseEntity.ok(userService.getUser(email).orElse(null));
+    public ResponseEntity<List<UserDto>> searchUser(@RequestParam("keyword") String keyword) {
+        return ResponseEntity.ok(userService.searchUser(keyword));
     }
 
     @GetMapping("/{userSeq}")

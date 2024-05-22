@@ -5,6 +5,7 @@ import com.ssafy.trippals.attraction.dto.AttractionDto;
 import com.ssafy.trippals.attraction.dto.ContentType;
 import com.ssafy.trippals.attraction.dto.NearByAttractionContentTypeSelect;
 import com.ssafy.trippals.attraction.dto.RouteAttractionDto;
+import com.ssafy.trippals.common.exception.AttractionAlreadyExistsException;
 import com.ssafy.trippals.common.exception.AttractionNotFoundException;
 import com.ssafy.trippals.common.exception.UserAuthException;
 import com.ssafy.trippals.common.page.dto.PageParams;
@@ -41,6 +42,11 @@ public class RouteAttractionServiceImpl implements RouteAttractionService {
                 .filter(route -> route.getOwner().equals(userSeq))
                 .orElseThrow(UserAuthException::new);
 
+        attractionDao.findByRouteSeq(routeSeq).stream()
+                .filter(r -> r.getContentId() == contentId)
+                .findAny()
+                .ifPresent((r) -> {throw new AttractionAlreadyExistsException();});
+
         routeDao.insertAttractionIntoRoute(routeSeq, contentId);
     }
 
@@ -49,6 +55,11 @@ public class RouteAttractionServiceImpl implements RouteAttractionService {
         routeDao.findRouteDtoBySeq(routeSeq)
                 .filter(route -> route.getOwner().equals(userSeq))
                 .orElseThrow(UserAuthException::new);
+
+        attractionDao.findByRouteSeq(routeSeq).stream()
+                .filter(r -> r.getContentId() == contentId)
+                .findAny()
+                .orElseThrow(AttractionNotFoundException::new);
 
         routeDao.deleteAttractionFromRoute(routeSeq, contentId);
     }
