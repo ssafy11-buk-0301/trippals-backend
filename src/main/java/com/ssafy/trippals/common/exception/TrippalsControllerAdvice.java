@@ -7,8 +7,6 @@ import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
 
-import java.io.FileNotFoundException;
-
 @RestControllerAdvice
 public class TrippalsControllerAdvice {
     @ExceptionHandler(LoginException.class)
@@ -45,5 +43,11 @@ public class TrippalsControllerAdvice {
     @ResponseStatus(HttpStatus.INTERNAL_SERVER_ERROR)
     public ErrorResult handleFileUploadFailException(FileUploadFailException ex) {
         return new ErrorResult(ErrorCode.FILE_UPLOAD_FAIL, ex.getMessage());
+    }
+
+    @ExceptionHandler(DupInsertException.class)
+    @ResponseStatus(HttpStatus.BAD_REQUEST)
+    public ErrorResult handleDupInsertException(DupInsertException ex){
+        return new ErrorResult(ErrorCode.RECORD_ALREADY_EXIST,ex.getMessage());
     }
 }

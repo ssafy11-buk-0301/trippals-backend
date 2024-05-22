@@ -1,12 +1,16 @@
 package com.ssafy.trippals.user.controller;
 
 import com.ssafy.trippals.SessionConst;
+import com.ssafy.trippals.board.dto.BoardParamDto;
+import com.ssafy.trippals.board.dto.BoardResultDto;
+import com.ssafy.trippals.board.service.BookmarkService;
 import com.ssafy.trippals.common.exception.UserAuthException;
 import com.ssafy.trippals.common.exception.UserNotFoundException;
 import com.ssafy.trippals.user.dto.UserDto;
 import com.ssafy.trippals.user.dto.UserPasswordUpdateForm;
 import com.ssafy.trippals.user.dto.UserUpdateForm;
 import com.ssafy.trippals.user.service.UserService;
+import jakarta.servlet.http.HttpSession;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -19,7 +23,7 @@ import java.util.Optional;
 @RequestMapping("/users")
 public class UserController {
     private final UserService userService;
-
+    private final BookmarkService bookmarkService;
     @GetMapping
     public ResponseEntity<UserDto> searchUser(@RequestParam("email") String email) {
         return ResponseEntity.ok(userService.getUser(email).orElse(null));
@@ -68,5 +72,15 @@ public class UserController {
         userService.updateUserPassword(userDto.getEmail(),
                 userPasswordUpdateForm.getCurrentPassword(),
                 userPasswordUpdateForm.getNewPassword());
+    }
+
+    @GetMapping(value="/bookmarks")
+    public ResponseEntity<BoardResultDto> boardListByUser(BoardParamDto boardParamDto,HttpSession session){
+        System.out.println(boardParamDto);
+        int userSeq=((UserDto) session.getAttribute(SessionConst.USER)).getSeq();
+        boardParamDto.setUserSeq(userSeq);
+
+        BoardResultDto boardResultDto=bookmarkService.bookmarkList(boardParamDto);
+        return ResponseEntity.ok(boardResultDto);
     }
 }

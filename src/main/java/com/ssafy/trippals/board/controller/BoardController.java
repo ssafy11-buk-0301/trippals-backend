@@ -7,6 +7,7 @@ import com.ssafy.trippals.board.dto.BoardResultDto;
 import com.ssafy.trippals.board.dto.BoardUserVO;
 import com.ssafy.trippals.board.service.BoardService;
 import com.ssafy.trippals.board.service.BookmarkService;
+import com.ssafy.trippals.common.exception.DupInsertException;
 import com.ssafy.trippals.user.dto.UserDto;
 import jakarta.servlet.http.HttpSession;
 import lombok.RequiredArgsConstructor;
@@ -15,22 +16,12 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartHttpServletRequest;
 
-import java.util.List;
-
 @RestController
 @RequiredArgsConstructor
 public class BoardController {
     private final BoardService service;
     private final BookmarkService bookmarkService;
-    int userSeq=5;//testCode
-    @GetMapping(value="/users/bookmarks")
-    public ResponseEntity<List<BoardDto>> boardListByUser(HttpSession session){
-
-        int userSeq=((UserDto) session.getAttribute(SessionConst.USER)).getSeq();
-        BoardResultDto boardResultDto=new BoardResultDto();//pagination?
-
-        return ResponseEntity.ok(bookmarkService.bookmarkList(userSeq));
-    }
+//    int userSeq=1;//testCode
     @GetMapping(value="/boards")
     public ResponseEntity<BoardResultDto> boardList(BoardParamDto boardParamDto){
 
@@ -52,7 +43,7 @@ public class BoardController {
         BoardParamDto boardParamDto = new BoardParamDto();
         boardParamDto.setBoardSeq(boardSeq);
         System.out.println(boardParamDto);
-//        int userSeq=((UserDto) session.getAttribute(SessionConst.USER)).getSeq();
+        int userSeq=((UserDto) session.getAttribute(SessionConst.USER)).getSeq();
 
 
         boardParamDto.setUserSeq(userSeq);
@@ -74,8 +65,8 @@ public class BoardController {
             BoardDto boardDto,
             MultipartHttpServletRequest request) {
 
-//        boardDto.setUserSeq( ((UserDto) request.getSession().getAttribute(SessionConst.USER)).getSeq());
-        boardDto.setUserSeq( userSeq);
+        boardDto.setUserSeq( ((UserDto) request.getSession().getAttribute(SessionConst.USER)).getSeq());
+//        boardDto.setUserSeq( userSeq);
         System.out.println(boardDto);
 
 //        if("undefined".equals(boardDto.getRouteSeq())) boardDto.setRouteSeq(null);
@@ -93,8 +84,8 @@ public class BoardController {
     public BoardResultDto boardUpdate(
             BoardDto boardDto,
             MultipartHttpServletRequest request){
-//        boardDto.setUserSeq( ((UserDto) request.getSession().getAttribute(SessionConst.USER)).getSeq());
-        boardDto.setUserSeq( userSeq);
+        boardDto.setUserSeq( ((UserDto) request.getSession().getAttribute(SessionConst.USER)).getSeq());
+//        boardDto.setUserSeq( userSeq);
         BoardResultDto boardResultDto = service.boardUpdate(boardDto, request);
 
         return boardResultDto;
@@ -102,11 +93,14 @@ public class BoardController {
 
     @PostMapping(value="/boards/{boardSeq}/bookmark")
     @ResponseStatus(HttpStatus.OK)
-    public void bookmarkInsert(HttpSession session,@PathVariable("boardSeq") int boardSeq){
+    public int bookmarkInsert(HttpSession session,@PathVariable("boardSeq") int boardSeq){
         int userSeq=((UserDto) session.getAttribute(SessionConst.USER)).getSeq();
 
         BoardUserVO boardUserVO=new BoardUserVO(boardSeq,userSeq);
-        bookmarkService.bookmarkInsert(boardUserVO);
+
+        int re=bookmarkService.bookmarkInsert(boardUserVO);
+        if(re==0) throw new DupInsertException();
+        else return re;
     }
 
     //bookmark/{boardSeq} ??
@@ -121,9 +115,9 @@ public class BoardController {
 
     @DeleteMapping(value="/boards/{boardSeq}")
     public BoardResultDto boardDelete(@PathVariable(value="boardSeq") int boardSeq,HttpSession session){
-//        UserDto userDto=(UserDto) session.getAttribute(SessionConst.USER);
-//        BoardResultDto boardResultDto = service.boardDelete(boardSeq, userDto.getSeq());
-        BoardResultDto boardResultDto = service.boardDelete(boardSeq, userSeq);
+        UserDto userDto=(UserDto) session.getAttribute(SessionConst.USER);
+        BoardResultDto boardResultDto = service.boardDelete(boardSeq, userDto.getSeq());
+//        BoardResultDto boardResultDto = service.boardDelete(boardSeq, userSeq);
 
         return boardResultDto;
     }

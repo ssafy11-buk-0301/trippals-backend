@@ -1,14 +1,11 @@
 package com.ssafy.trippals.board.service;
 
 import com.ssafy.trippals.board.dao.BoardDao;
-import com.ssafy.trippals.board.dto.BoardDto;
-import com.ssafy.trippals.board.dto.BoardFileDto;
-import com.ssafy.trippals.board.dto.BoardParamDto;
-import com.ssafy.trippals.board.dto.BoardResultDto;
+import com.ssafy.trippals.board.dao.BookmarkDao;
+import com.ssafy.trippals.board.dto.*;
 import com.ssafy.trippals.common.file.FileUploadService;
 import com.ssafy.trippals.common.file.UploadedFile;
 import lombok.RequiredArgsConstructor;
-import org.apache.commons.io.FilenameUtils;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.multipart.MultipartFile;
@@ -17,13 +14,13 @@ import org.springframework.web.multipart.MultipartHttpServletRequest;
 import java.io.File;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.UUID;
 
 @Service
 @RequiredArgsConstructor
 public class BoardServiceImpl implements BoardService{
 
     private final BoardDao dao;
+    private final BookmarkDao bmdao;
     private final FileUploadService fileUploadService;
 
     private static final String SUCCESS = "success";
@@ -80,11 +77,11 @@ public class BoardServiceImpl implements BoardService{
 
             BoardDto dto = dao.findBoardBySeq(boardParamDto.getBoardSeq());
             List<BoardFileDto> fileList = dao.boardDetailFileList(dto.getSeq());
+            int checkBookmark=bmdao.checkBookmarkByUserSeq(new BoardUserVO(boardParamDto.getBoardSeq(),boardParamDto.getUserSeq()));
 
             dto.setFileList(fileList);
             boardResultDto.setDto(dto);
-
-
+            boardResultDto.setCheckBookmark(checkBookmark == 1);
 
         }catch(Exception e) {
             e.printStackTrace();
