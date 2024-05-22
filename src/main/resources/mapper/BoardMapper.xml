@@ -4,9 +4,10 @@
     <!--  BoardParams(limit,offset,SearchWord)로 Select  -->
     <!--orderBy 프론트에서 기본값 제공-->
     <select id="findBoard" parameterType="BoardParamDto" resultType="BoardDto">
-        select  b.seq, b.user_seq, b.title, b.content, b.reg_dt, b.read_count, b.is_draft, b.route_seq,u.name writer
+        select  b.seq, b.user_seq, b.title, b.content, b.reg_dt, b.read_count, b.is_draft, b.route_seq,u.name writer,r.thumbnail
         from board b
         inner join users u on b.user_seq = u.seq
+        LEFT JOIN route r ON b.route_seq = r.seq
         where b.is_draft = 0
         <choose>
             <when test="orderBy == 'seq'">
@@ -65,7 +66,6 @@
         where title like concat('%', #{searchWord} ,'%') and is_draft=0
     </select>
 
-
     <select id="findBoardBySeq" parameterType="int" resultType="com.ssafy.trippals.board.dto.BoardDto">
 
         SELECT
@@ -95,7 +95,8 @@
     <update id="updateBoard" parameterType="BoardDto">
         update board
         set title = #{title},
-            content   = #{content}
+            content   = #{content},
+            route_seq = #{routeSeq}
         where seq = #{seq} and user_seq=#{userSeq};
     </update>
 

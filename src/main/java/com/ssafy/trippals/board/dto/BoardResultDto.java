@@ -11,4 +11,5 @@ public class BoardResultDto {
 	private BoardDto dto;
 	private List<BoardDto> list;
 	private int count;//pagination
+	private boolean checkBookmark;
 }
