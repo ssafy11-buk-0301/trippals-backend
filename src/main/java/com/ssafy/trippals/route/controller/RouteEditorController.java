@@ -57,9 +57,9 @@ public class RouteEditorController {
     public void addRouteEditorRequest(
             @SessionAttribute(SessionConst.USER) UserDto userDto,
             @PathVariable("routeSeq") int routeSeq,
-            @RequestParam("editorSeq") Integer editorSeq
+            @RequestParam("editor") String editor
     ) {
-        routeEditorService.addRequest(routeSeq, userDto.getSeq(), editorSeq);
+        routeEditorService.addRequest(routeSeq, userDto.getSeq(), editor);
     }
 
     @PostMapping("/routes/{routeSeq}/editors/confirm")

@@ -7,8 +7,7 @@
             resultType="UserDto">
         select  *
         from    users
-        where   email like CONCAT(#{email}, '%')
-        limit   10;
+        where   email = #{email};
     </select>
 
     <!--  사용자를 키워드로 조회  -->

@@ -3,6 +3,7 @@ package com.ssafy.trippals.route.service;
 import com.ssafy.trippals.attraction.dto.RouteAttractionDto;
 import com.ssafy.trippals.common.exception.UserAlreadyExistsException;
 import com.ssafy.trippals.common.exception.UserAuthException;
+import com.ssafy.trippals.common.exception.UserNotFoundException;
 import com.ssafy.trippals.common.page.dto.PageParams;
 import com.ssafy.trippals.common.page.dto.PageResponse;
 import com.ssafy.trippals.route.dao.RouteDao;
@@ -10,6 +11,7 @@ import com.ssafy.trippals.route.dao.RouteEditorDao;
 import com.ssafy.trippals.route.dto.RouteDto;
 import com.ssafy.trippals.route.dto.RouteEditorDto;
 import com.ssafy.trippals.route.dto.RouteEditorRequestDto;
+import com.ssafy.trippals.user.dao.UserDao;
 import com.ssafy.trippals.user.dto.UserDto;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
@@ -24,6 +26,7 @@ import java.util.Optional;
 public class RouteEditorServiceImpl implements RouteEditorService {
     private final RouteDao routeDao;
     private final RouteEditorDao routeEditorDao;
+    private final UserDao userDao;
 
     @Override
     public List<UserDto> findAllEditors(int userSeq, int routeSeq) {
@@ -63,12 +66,14 @@ public class RouteEditorServiceImpl implements RouteEditorService {
     }
 
     @Override
-    public boolean addRequest(int routeSeq, int owner, int editor) {
+    public boolean addRequest(int routeSeq, int owner, String editorEmail) {
         if (!isOwner(routeSeq, owner)) throw new UserAuthException();
 
-        if (canEdit(routeSeq, editor)) throw new UserAlreadyExistsException();
+        UserDto editor = userDao.findUserDataByEmail(editorEmail).orElseThrow(UserNotFoundException::new);
 
-        return 1 == routeEditorDao.insertRouteEditorRequest(new RouteEditorRequestDto(routeSeq, editor));
+        if (canEdit(routeSeq, editor.getSeq())) throw new UserAlreadyExistsException();
+
+        return 1 == routeEditorDao.insertRouteEditorRequest(new RouteEditorRequestDto(routeSeq, editor.getSeq()));
     }
 
     @Override
