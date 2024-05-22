@@ -73,7 +73,7 @@ public class RouteEditorServiceImpl implements RouteEditorService {
 
         if (canEdit(routeSeq, editor.getSeq())) throw new UserAlreadyExistsException();
 
-        return 1 == routeEditorDao.insertRouteEditorRequest(new RouteEditorRequestDto(routeSeq, editor.getSeq()));
+        return 1 == routeEditorDao.insertRouteEditorRequest(new RouteEditorRequestDto(routeSeq, null, editor.getSeq()));
     }
 
     @Override

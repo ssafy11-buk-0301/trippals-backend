@@ -17,9 +17,10 @@
 
     <!--  받은 초대 조회  -->
     <select id="findRequestByUserSeq" resultType="com.ssafy.trippals.route.dto.RouteEditorRequestDto">
-        select  seq, user_seq, route_seq
-        from    route_editors_request
-        where   user_seq = #{userSeq}
+        select  rer.seq, rer.user_seq, rer.route_seq, r.name route_name
+        from    route_editors_request rer, route r
+        where   rer.user_seq = #{userSeq}
+        and     rer.route_seq = r.seq;
     </select>
 
     <!--  공유 받은 여행 경로 조회 -->
@@ -45,6 +46,14 @@
         from    users u, route_editors re
         where   u.seq = re.editor
         and     re.route_seq = #{routeSeq};
+    </select>
+
+    <select id="findRequestByUserSeqAndRouteSeq"
+            resultType="com.ssafy.trippals.route.dto.RouteEditorRequestDto">
+        select  rer.seq, rer.user_seq, rer.route_seq, r.route_name
+        from    route_editors_request rer, route r
+        where   rer.user_seq = #{userSeq}
+          and     r.seq = #{routeSeq}
     </select>
 
     <!--  여행 경로에 편집자 추가  -->
