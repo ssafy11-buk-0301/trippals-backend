@@ -14,6 +14,7 @@ import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.io.IOException;
+import java.util.List;
 import java.util.Optional;
 
 @Service
@@ -48,6 +49,13 @@ public class UserServiceImpl implements UserService {
         return userDao.findUserDataByEmail(email).stream()
                 .peek(u -> u.setPassword(""))
                 .findFirst();
+    }
+
+    @Override
+    public List<UserDto> searchUser(String keyword) {
+        return userDao.findUserDataByKeyword(keyword).stream()
+                .peek(u -> u.setPassword(""))
+                .toList();
     }
 
     @Override

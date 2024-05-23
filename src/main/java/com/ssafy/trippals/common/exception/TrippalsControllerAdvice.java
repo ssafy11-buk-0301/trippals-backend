@@ -45,6 +45,18 @@ public class TrippalsControllerAdvice {
         return new ErrorResult(ErrorCode.FILE_UPLOAD_FAIL, ex.getMessage());
     }
 
+    @ExceptionHandler(AttractionNotFoundException.class)
+    @ResponseStatus(HttpStatus.BAD_REQUEST)
+    public ErrorResult handleAttractionNotFoundException(AttractionNotFoundException ex) {
+        return new ErrorResult(ErrorCode.ATTRACTION_NOT_FOUND, ex.getMessage());
+    }
+
+    @ExceptionHandler(AttractionAlreadyExistsException.class)
+    @ResponseStatus(HttpStatus.BAD_REQUEST)
+    public ErrorResult handleAttractionAlreadyExistsException(AttractionAlreadyExistsException ex) {
+        return new ErrorResult(ErrorCode.ATTRACTION_ALREADY_EXIST, ex.getMessage());
+    }
+
     @ExceptionHandler(DupInsertException.class)
     @ResponseStatus(HttpStatus.BAD_REQUEST)
     public ErrorResult handleDupInsertException(DupInsertException ex){

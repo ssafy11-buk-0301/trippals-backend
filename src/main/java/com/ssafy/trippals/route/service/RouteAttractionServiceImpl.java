@@ -5,6 +5,7 @@ import com.ssafy.trippals.attraction.dto.AttractionDto;
 import com.ssafy.trippals.attraction.dto.ContentType;
 import com.ssafy.trippals.attraction.dto.NearByAttractionContentTypeSelect;
 import com.ssafy.trippals.attraction.dto.RouteAttractionDto;
+import com.ssafy.trippals.common.exception.AttractionAlreadyExistsException;
 import com.ssafy.trippals.common.exception.AttractionNotFoundException;
 import com.ssafy.trippals.common.exception.UserAuthException;
 import com.ssafy.trippals.common.page.dto.PageParams;
@@ -23,12 +24,13 @@ import java.util.Optional;
 public class RouteAttractionServiceImpl implements RouteAttractionService {
     private final RouteDao routeDao;
     private final AttractionDao attractionDao;
+    private final RouteEditorService routeEditorService;
 
     @Override
     public List<AttractionDto> getRouteAttractions(int userSeq, int routeSeq) {
-        routeDao.findRouteDtoBySeq(routeSeq)
-                .filter(route -> route.getOwner().equals(userSeq))
-                .orElseThrow(UserAuthException::new);
+        if (!routeEditorService.canEdit(routeSeq, userSeq)) {
+            throw new UserAuthException();
+        }
 
         return attractionDao.findByRouteSeq(routeSeq).stream()
                 .map(AttractionDto::new)
@@ -37,27 +39,37 @@ public class RouteAttractionServiceImpl implements RouteAttractionService {
 
     @Override
     public void addRouteAttraction(int userSeq, int routeSeq, int contentId) {
-        routeDao.findRouteDtoBySeq(routeSeq)
-                .filter(route -> route.getOwner().equals(userSeq))
-                .orElseThrow(UserAuthException::new);
+        if (!routeEditorService.canEdit(routeSeq, userSeq)) {
+            throw new UserAuthException();
+        }
+
+        attractionDao.findByRouteSeq(routeSeq).stream()
+                .filter(r -> r.getContentId() == contentId)
+                .findAny()
+                .ifPresent((r) -> {throw new AttractionAlreadyExistsException();});
 
         routeDao.insertAttractionIntoRoute(routeSeq, contentId);
     }
 
     @Override
     public void deleteRouteAttraction(int userSeq, int routeSeq, int contentId) {
-        routeDao.findRouteDtoBySeq(routeSeq)
-                .filter(route -> route.getOwner().equals(userSeq))
-                .orElseThrow(UserAuthException::new);
+        if (!routeEditorService.canEdit(routeSeq, userSeq)) {
+            throw new UserAuthException();
+        }
+
+        attractionDao.findByRouteSeq(routeSeq).stream()
+                .filter(r -> r.getContentId() == contentId)
+                .findAny()
+                .orElseThrow(AttractionNotFoundException::new);
 
         routeDao.deleteAttractionFromRoute(routeSeq, contentId);
     }
 
     @Override
     public void changeRouteAttraction(int userSeq, int routeSeq, int from, int to) {
-        routeDao.findRouteDtoBySeq(routeSeq)
-                .filter(route -> route.getOwner().equals(userSeq))
-                .orElseThrow(UserAuthException::new);
+        if (!routeEditorService.canEdit(routeSeq, userSeq)) {
+            throw new UserAuthException();
+        }
 
         Optional<RouteAttractionDto> fromAttraction = routeDao.findRouteAttractionDtoByRouteSeqAndContentId(routeSeq, from);
         Optional<RouteAttractionDto> toAttraction = routeDao.findRouteAttractionDtoByRouteSeqAndContentId(routeSeq, to);
@@ -70,9 +82,9 @@ public class RouteAttractionServiceImpl implements RouteAttractionService {
 
     @Override
     public PageResponse<AttractionDto> getNearbyRouteAttractions(int userSeq, int routeSeq, PageParams pageParams, ContentType contentType) {
-        routeDao.findRouteDtoBySeq(routeSeq)
-                .filter(route -> route.getOwner().equals(userSeq))
-                .orElseThrow(UserAuthException::new);
+        if (!routeEditorService.canEdit(routeSeq, userSeq)) {
+            throw new UserAuthException();
+        }
 
         NearByAttractionContentTypeSelect attractionSelect = new NearByAttractionContentTypeSelect(routeSeq, pageParams, contentType);
         List<AttractionDto> contents =

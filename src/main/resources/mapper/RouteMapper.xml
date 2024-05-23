@@ -15,8 +15,27 @@
         where   seq = #{seq};
     </select>
 
-    <!--  여행지에서 여행   -->
-    <select id="findRouteAttractionDtoByRouteSeqAndContentId" resultType="RouteAttractionDto"></select>
+    <!--  여행 경로에서 특정 여행지가 존재하는지 검색  -->
+    <select id="findRouteAttractionDtoByRouteSeqAndContentId" resultType="RouteAttractionDto">
+        select  ai.content_id       content_id,
+                content_type_id,
+                title,
+                overview,
+                addr1               addr,
+                first_image         image,
+                latitude,
+                longitude,
+                ra.order_number     order_number
+
+        from    attraction_info ai, attraction_description ad, route_attraction ra
+
+        where   ai.content_id = ad.content_id
+          and   ai.content_id = ra.attraction_seq
+          and   ai.content_id = #{ contentId }
+          and   ra.route_seq = #{ routeSeq }
+
+        order by order_number;
+    </select>
 
     <!--  Route 생성  -->
     <insert id="insertRoute" parameterType="RouteDto"

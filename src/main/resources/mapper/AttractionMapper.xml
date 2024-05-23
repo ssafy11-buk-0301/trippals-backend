@@ -206,4 +206,36 @@
           and   ai.c;
     </select>
 
+    <!--  여행지로 리뷰 조회  -->
+    <select id="findReviewByContentId" resultType="com.ssafy.trippals.board.dto.BoardDto">
+        select  b.seq, b.user_seq, b.title, b.content, b.reg_dt, b.read_count, b.is_draft, b.route_seq,u.name writer,r.thumbnail
+
+        from  board b, route r, users u, (
+            select    distinct route_seq
+            from    route_attraction
+            where    attraction_seq = #{ contentId }
+        ) candidate_route
+
+        where  b.user_seq = u.seq
+          and  b.route_seq = r.seq
+          and  b.route_seq = candidate_route.route_seq
+
+        limit   #{ offset }, #{ limit };
+    </select>
+
+    <!--  여행지 리뷰 개수 세기  -->
+    <select id="countReviewByContentId" resultType="java.lang.Integer">
+        select  count(b.seq)
+
+        from  board b, route r, users u, (
+            select    distinct route_seq
+            from    route_attraction
+            where    attraction_seq = #{ contentId }
+        ) candidate_route
+
+        where  b.user_seq = u.seq
+          and  b.route_seq = r.seq
+          and  b.route_seq = candidate_route.route_seq;
+    </select>
+
 </mapper>

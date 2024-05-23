@@ -3,6 +3,8 @@ package com.ssafy.trippals.route.controller;
 import com.ssafy.trippals.SessionConst;
 import com.ssafy.trippals.common.page.dto.PageParams;
 import com.ssafy.trippals.common.page.dto.PageResponse;
+import com.ssafy.trippals.event.EventService;
+import com.ssafy.trippals.event.EventType;
 import com.ssafy.trippals.route.dto.RouteDto;
 import com.ssafy.trippals.route.dto.RouteEditorRequestDto;
 import com.ssafy.trippals.route.service.RouteEditorService;
@@ -18,6 +20,7 @@ import java.util.List;
 @RequiredArgsConstructor
 public class RouteEditorController {
     private final RouteEditorService routeEditorService;
+    private final EventService eventService;
 
     @GetMapping("/routes/{routeSeq}/editors")
     public ResponseEntity<List<UserDto>> getRouteEditors(
@@ -57,9 +60,9 @@ public class RouteEditorController {
     public void addRouteEditorRequest(
             @SessionAttribute(SessionConst.USER) UserDto userDto,
             @PathVariable("routeSeq") int routeSeq,
-            @RequestParam("editorSeq") Integer editorSeq
+            @RequestParam("editor") String editor
     ) {
-        routeEditorService.addRequest(routeSeq, userDto.getSeq(), editorSeq);
+        routeEditorService.addRequest(routeSeq, userDto.getSeq(), editor);
     }
 
     @PostMapping("/routes/{routeSeq}/editors/confirm")
@@ -69,6 +72,7 @@ public class RouteEditorController {
             @PathVariable("routeSeq") int routeSeq
     ) {
         routeEditorService.confirmRequest(routeSeq, userDto.getSeq());
+        eventService.sendRouteModifyEvent(routeSeq, EventType.ADD_EDITOR);
     }
 
     @PostMapping("/routes/{routeSeq}/editors/reject")

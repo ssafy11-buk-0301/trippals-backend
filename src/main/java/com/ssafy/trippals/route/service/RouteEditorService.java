@@ -15,7 +15,7 @@ public interface RouteEditorService {
     boolean removeEditor(int routeSeq, int owner, int editor);
 
     List<RouteEditorRequestDto> findAllRequests(int userSeq);
-    boolean addRequest(int routeSeq, int owner, int editor);
+    boolean addRequest(int routeSeq, int owner, String editorEmail);
     boolean confirmRequest(int routeSeq, int userSeq);
     boolean rejectRequest(int routeSeq, int userSeq);
 
