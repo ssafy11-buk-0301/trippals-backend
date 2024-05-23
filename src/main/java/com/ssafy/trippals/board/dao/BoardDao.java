@@ -16,7 +16,7 @@ public interface BoardDao {
     Integer updateBoard(BoardDto boardDto);
     Integer deleteBoardBySeq(Integer boardSeq,Integer userSeq);
     List<BoardDto> findBoardBySearchWord(BoardParamDto boardParamDto);
-    Integer countBoard();
+    Integer countBoard(String searchWord);
     Integer countBySearchWord(String searchWord);
 
     // map - Dto

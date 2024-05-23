@@ -33,7 +33,8 @@ public class BoardServiceImpl implements BoardService{
 
         try {
             List<BoardDto> list = dao.findBoard(boardParamDto);
-            int count = dao.countBoard();
+            int count = dao.countBoard(boardParamDto.getSearchWord());
+
             boardResultDto.setList(list);
             boardResultDto.setCount(count);
 

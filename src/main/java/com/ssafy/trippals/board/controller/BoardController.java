@@ -26,13 +26,14 @@ public class BoardController {
     public ResponseEntity<BoardResultDto> boardList(BoardParamDto boardParamDto){
 
         BoardResultDto boardResultDto;
+        boardResultDto = service.boardList(boardParamDto);
 //        System.out.println(boardParamDto);
-        if( boardParamDto.getSearchWord()==null || boardParamDto.getSearchWord().isEmpty()) {
-            boardResultDto = service.boardList(boardParamDto);
-        }else {
-            boardResultDto = service.boardListSearchWord(boardParamDto);
-            System.out.println(boardParamDto);
-        }
+//        if( boardParamDto.getSearchWord()==null || boardParamDto.getSearchWord().isEmpty()) {
+//            boardResultDto = service.boardList(boardParamDto);
+//        }else {
+//            boardResultDto = service.boardListSearchWord(boardParamDto);
+//            System.out.println(boardParamDto);
+//        }
         return ResponseEntity.ok(boardResultDto);
     }
 

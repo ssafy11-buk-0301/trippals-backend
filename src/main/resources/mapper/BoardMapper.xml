@@ -9,6 +9,9 @@
         inner join users u on b.user_seq = u.seq
         LEFT JOIN route r ON b.route_seq = r.seq
         where b.is_draft = 0
+        <if test="searchWord != '' and searchWord !=null">
+            and b.title like concat('%', #{searchWord} ,'%')
+        </if>
         <choose>
             <when test="orderBy == 'seq'">
                 order by b.seq
@@ -56,8 +59,12 @@
             limit #{limit} offset #{offset}
     </select>
 
-    <select id="countBoard" resultType="int">
-        SELECT COUNT(*) FROM board where is_draft=0
+    <select id="countBoard" parameterType="string" resultType="int">
+        SELECT COUNT(*) FROM board
+        where is_draft=0
+        <if test="searchWord != '' and searchWord !=null">
+            and title like concat('%', #{searchWord} ,'%')
+        </if>
     </select>
 
     <select id="countBySearchWord" parameterType="string" resultType="int">
