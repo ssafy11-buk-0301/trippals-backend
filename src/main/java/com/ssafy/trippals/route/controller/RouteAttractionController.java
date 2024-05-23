@@ -39,6 +39,7 @@ public class RouteAttractionController {
     ) {
         routeAttractionService.addRouteAttraction(userDto.getSeq(), routeSeq, contentId);
         eventService.sendRouteModifyEvent(routeSeq, EventType.UPDATE_ROUTE);
+        eventService.sendAiRecommendEvent(routeSeq, contentId);
     }
 
     @DeleteMapping("/attractions/{contentId}")

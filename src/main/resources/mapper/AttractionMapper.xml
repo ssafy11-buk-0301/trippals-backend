@@ -185,7 +185,7 @@
                 first_image         image,
                 latitude,
                 longitude
-        from     )
+        from    attraction_info ai, attraction_description ad
         where   ai.content_id = ad.content_id
           and   ai.content_id = #{ contentId };
     </select>
