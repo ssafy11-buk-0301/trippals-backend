@@ -5,6 +5,7 @@ import com.ssafy.trippals.common.exception.UserAuthException;
 import com.ssafy.trippals.common.exception.UserNotFoundException;
 import com.ssafy.trippals.common.page.dto.PageParams;
 import com.ssafy.trippals.common.page.dto.PageResponse;
+import com.ssafy.trippals.event.EventService;
 import com.ssafy.trippals.route.dao.RouteDao;
 import com.ssafy.trippals.route.dao.RouteEditorDao;
 import com.ssafy.trippals.route.dto.RouteDto;
@@ -26,6 +27,7 @@ public class RouteEditorServiceImpl implements RouteEditorService {
     private final RouteDao routeDao;
     private final RouteEditorDao routeEditorDao;
     private final UserDao userDao;
+    private final EventService eventService;
 
     @Override
     public List<UserDto> findAllEditors(int userSeq, int routeSeq) {
@@ -69,6 +71,7 @@ public class RouteEditorServiceImpl implements RouteEditorService {
         if (!isOwner(routeSeq, owner)) throw new UserAuthException();
 
         UserDto editor = userDao.findUserDataByEmail(editorEmail).orElseThrow(UserNotFoundException::new);
+        eventService.sendRequestAddEvent(editor.getSeq());
 
         if (canEdit(routeSeq, editor.getSeq())) throw new UserAlreadyExistsException();
 

@@ -4,6 +4,8 @@ import com.ssafy.trippals.SessionConst;
 import com.ssafy.trippals.attraction.dto.AttractionDto;
 import com.ssafy.trippals.attraction.dto.ContentType;
 import com.ssafy.trippals.common.page.dto.PageResponse;
+import com.ssafy.trippals.event.EventService;
+import com.ssafy.trippals.event.EventType;
 import com.ssafy.trippals.route.dto.NearByAttractionContentTypeParams;
 import com.ssafy.trippals.route.service.RouteAttractionService;
 import com.ssafy.trippals.user.dto.UserDto;
@@ -19,6 +21,7 @@ import java.util.List;
 @RequiredArgsConstructor
 public class RouteAttractionController {
     private final RouteAttractionService routeAttractionService;
+    private final EventService eventService;
 
     @GetMapping("/attractions")
     public ResponseEntity<List<AttractionDto>> getRouteAttractions(
@@ -31,10 +34,11 @@ public class RouteAttractionController {
     @PostMapping("/attractions/{contentId}")
     @ResponseStatus(HttpStatus.OK)
     public void addRouteAttraction(
-            @SessionAttribute(SessionConst.USER) UserDto UserDto,
+            @SessionAttribute(SessionConst.USER) UserDto userDto,
             @PathVariable("routeSeq") int routeSeq, @PathVariable("contentId") int contentId
     ) {
-        routeAttractionService.addRouteAttraction(UserDto.getSeq(), routeSeq, contentId);
+        routeAttractionService.addRouteAttraction(userDto.getSeq(), routeSeq, contentId);
+        eventService.sendRouteModifyEvent(routeSeq, EventType.UPDATE_ROUTE);
     }
 
     @DeleteMapping("/attractions/{contentId}")
@@ -44,6 +48,7 @@ public class RouteAttractionController {
             @PathVariable("routeSeq") int routeSeq, @PathVariable("contentId") int contentId
     ) {
         routeAttractionService.deleteRouteAttraction(UserDto.getSeq(), routeSeq, contentId);
+        eventService.sendRouteModifyEvent(routeSeq, EventType.UPDATE_ROUTE);
     }
 
     @PutMapping("/attractions/{from}/{to}")
@@ -53,6 +58,7 @@ public class RouteAttractionController {
             @PathVariable("routeSeq") int routeSeq, @PathVariable("from") int from, @PathVariable("to") int to
     ) {
         routeAttractionService.changeRouteAttraction(UserDto.getSeq(), routeSeq, from, to);
+        eventService.sendRouteModifyEvent(routeSeq, EventType.UPDATE_ROUTE);
     }
 
     @GetMapping("/nearby-attractions")
