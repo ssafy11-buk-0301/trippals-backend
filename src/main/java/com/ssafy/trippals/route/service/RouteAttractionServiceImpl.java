@@ -24,12 +24,13 @@ import java.util.Optional;
 public class RouteAttractionServiceImpl implements RouteAttractionService {
     private final RouteDao routeDao;
     private final AttractionDao attractionDao;
+    private final RouteEditorService routeEditorService;
 
     @Override
     public List<AttractionDto> getRouteAttractions(int userSeq, int routeSeq) {
-        routeDao.findRouteDtoBySeq(routeSeq)
-                .filter(route -> route.getOwner().equals(userSeq))
-                .orElseThrow(UserAuthException::new);
+        if (!routeEditorService.canEdit(routeSeq, userSeq)) {
+            throw new UserAuthException();
+        }
 
         return attractionDao.findByRouteSeq(routeSeq).stream()
                 .map(AttractionDto::new)
@@ -38,9 +39,9 @@ public class RouteAttractionServiceImpl implements RouteAttractionService {
 
     @Override
     public void addRouteAttraction(int userSeq, int routeSeq, int contentId) {
-        routeDao.findRouteDtoBySeq(routeSeq)
-                .filter(route -> route.getOwner().equals(userSeq))
-                .orElseThrow(UserAuthException::new);
+        if (!routeEditorService.canEdit(routeSeq, userSeq)) {
+            throw new UserAuthException();
+        }
 
         attractionDao.findByRouteSeq(routeSeq).stream()
                 .filter(r -> r.getContentId() == contentId)
@@ -52,9 +53,9 @@ public class RouteAttractionServiceImpl implements RouteAttractionService {
 
     @Override
     public void deleteRouteAttraction(int userSeq, int routeSeq, int contentId) {
-        routeDao.findRouteDtoBySeq(routeSeq)
-                .filter(route -> route.getOwner().equals(userSeq))
-                .orElseThrow(UserAuthException::new);
+        if (!routeEditorService.canEdit(routeSeq, userSeq)) {
+            throw new UserAuthException();
+        }
 
         attractionDao.findByRouteSeq(routeSeq).stream()
                 .filter(r -> r.getContentId() == contentId)
@@ -66,9 +67,9 @@ public class RouteAttractionServiceImpl implements RouteAttractionService {
 
     @Override
     public void changeRouteAttraction(int userSeq, int routeSeq, int from, int to) {
-        routeDao.findRouteDtoBySeq(routeSeq)
-                .filter(route -> route.getOwner().equals(userSeq))
-                .orElseThrow(UserAuthException::new);
+        if (!routeEditorService.canEdit(routeSeq, userSeq)) {
+            throw new UserAuthException();
+        }
 
         Optional<RouteAttractionDto> fromAttraction = routeDao.findRouteAttractionDtoByRouteSeqAndContentId(routeSeq, from);
         Optional<RouteAttractionDto> toAttraction = routeDao.findRouteAttractionDtoByRouteSeqAndContentId(routeSeq, to);
@@ -81,9 +82,9 @@ public class RouteAttractionServiceImpl implements RouteAttractionService {
 
     @Override
     public PageResponse<AttractionDto> getNearbyRouteAttractions(int userSeq, int routeSeq, PageParams pageParams, ContentType contentType) {
-        routeDao.findRouteDtoBySeq(routeSeq)
-                .filter(route -> route.getOwner().equals(userSeq))
-                .orElseThrow(UserAuthException::new);
+        if (!routeEditorService.canEdit(routeSeq, userSeq)) {
+            throw new UserAuthException();
+        }
 
         NearByAttractionContentTypeSelect attractionSelect = new NearByAttractionContentTypeSelect(routeSeq, pageParams, contentType);
         List<AttractionDto> contents =
