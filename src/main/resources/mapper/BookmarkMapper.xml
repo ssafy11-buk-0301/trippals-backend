@@ -40,7 +40,7 @@
     <!--  Board 삭제  -->
     <delete id="deleteBookmark" parameterType="BoardUserVO">
         delete from board_bookmark
-        where seq = #{boardSeq} and user_seq=#{userSeq};
+        where board_seq = #{boardSeq} and user_seq=#{userSeq};
     </delete>
 
 </mapper>

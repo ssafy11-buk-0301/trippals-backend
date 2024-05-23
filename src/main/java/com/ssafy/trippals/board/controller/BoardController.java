@@ -111,7 +111,7 @@ public class BoardController {
         int userSeq=((UserDto) session.getAttribute(SessionConst.USER)).getSeq();
 
         BoardUserVO boardUserVO=new BoardUserVO(boardSeq,userSeq);
-        bookmarkService.bookmarkInsert(boardUserVO);
+        bookmarkService.bookmarkDelete(boardUserVO);
     }
 
     @DeleteMapping(value="/boards/{boardSeq}")
