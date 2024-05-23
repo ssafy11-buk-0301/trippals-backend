@@ -101,10 +101,22 @@
     <!--  Board 수정  -->
     <update id="updateBoard" parameterType="BoardDto">
         update board
-        set title = #{title},
-            content   = #{content},
-            route_seq = #{routeSeq}
-        where seq = #{seq} and user_seq=#{userSeq};
+        set
+        title = #{title},
+        content = #{content},
+        route_seq =
+        <choose>
+            <when test="routeSeq != '' and routeSeq != null">
+                #{routeSeq}
+            </when>
+            <otherwise>
+                null
+            </otherwise>
+        </choose>
+        where
+        seq = #{seq}
+        and user_seq = #{userSeq};
+
     </update>
 
     <!--  Board 삭제  -->
