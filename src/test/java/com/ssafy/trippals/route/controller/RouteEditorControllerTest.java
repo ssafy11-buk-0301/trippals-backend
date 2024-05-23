@@ -133,7 +133,7 @@ class RouteEditorControllerTest {
         sessionNone.setAttribute(SessionConst.USER, none);
         sessionEditor.setAttribute(SessionConst.USER, none);
 
-        routeEditorDao.insertRouteEditorRequest(new RouteEditorRequestDto(route.getSeq(), none.getSeq()));
+        routeEditorDao.insertRouteEditorRequest(new RouteEditorRequestDto(route.getSeq(), null, none.getSeq()));
 
         // then
         mvc.perform(

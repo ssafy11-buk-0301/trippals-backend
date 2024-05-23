@@ -3,13 +3,12 @@ package com.ssafy.trippals.attraction.controller;
 import com.ssafy.trippals.attraction.dto.AttractionDto;
 import com.ssafy.trippals.attraction.dto.AttractionSearchParams;
 import com.ssafy.trippals.attraction.service.AttractionService;
+import com.ssafy.trippals.board.dto.BoardDto;
+import com.ssafy.trippals.common.page.dto.PageParams;
 import com.ssafy.trippals.common.page.dto.PageResponse;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.ModelAttribute;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 @RestController
 @RequiredArgsConstructor
@@ -27,5 +26,13 @@ public class AttractionController {
                      attractionService.findByGugunAndKeyword(params);
 
         return ResponseEntity.ok(contents);
+    }
+
+    @GetMapping("/{contentId}/boards")
+    public ResponseEntity<PageResponse<BoardDto>> findReviews(
+            @PathVariable("contentId") int contentId,
+            @ModelAttribute PageParams params
+            ) {
+        return ResponseEntity.ok(attractionService.findReview(contentId, params));
     }
 }

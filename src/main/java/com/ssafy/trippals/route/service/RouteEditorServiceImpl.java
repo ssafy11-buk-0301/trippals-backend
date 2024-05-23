@@ -1,6 +1,5 @@
 package com.ssafy.trippals.route.service;
 
-import com.ssafy.trippals.attraction.dto.RouteAttractionDto;
 import com.ssafy.trippals.common.exception.UserAlreadyExistsException;
 import com.ssafy.trippals.common.exception.UserAuthException;
 import com.ssafy.trippals.common.exception.UserNotFoundException;
@@ -85,7 +84,7 @@ public class RouteEditorServiceImpl implements RouteEditorService {
         requestList.stream()
                 .filter(r -> r.getRouteSeq() == routeSeq)
                 .limit(1)
-                .peek(r -> routeEditorDao.deleteRouteEditorRequest(r.getSeq()))
+                .peek(r -> routeEditorDao.deleteRequestByUserSeqAndRouteSeq(userSeq, routeSeq))
                 .map(r -> new RouteEditorDto(routeSeq, userSeq))
                 .peek(routeEditorDao::insertRouteEditor)
                 .findAny()
@@ -103,7 +102,7 @@ public class RouteEditorServiceImpl implements RouteEditorService {
         requestList.stream()
                 .filter(r -> r.getRouteSeq() == routeSeq)
                 .limit(1)
-                .peek(r -> routeEditorDao.deleteRouteEditorRequest(r.getSeq()))
+                .peek(r -> routeEditorDao.deleteRequestByUserSeqAndRouteSeq(userSeq, routeSeq))
                 .findAny()
                 .orElseThrow(UserAuthException::new);
 

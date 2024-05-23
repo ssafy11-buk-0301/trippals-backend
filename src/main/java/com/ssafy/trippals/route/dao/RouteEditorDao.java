@@ -12,9 +12,8 @@ import java.util.List;
 @Mapper
 public interface RouteEditorDao {
     List<RouteEditorRequestDto> findRequestByUserSeq(@Param("userSeq") int userSeq);
-    List<RouteEditorRequestDto> findRequestByUserSeqAndRouteSeq(@Param("userSeq") int userSeq, @Param("routeSeq") int routeSeq);
+    int deleteRequestByUserSeqAndRouteSeq(@Param("userSeq") int userSeq, @Param("routeSeq") int routeSeq);
     int insertRouteEditorRequest(RouteEditorRequestDto routeEditorRequestDto);
-    int deleteRouteEditorRequest(@Param("seq") int seq);
 
     List<RouteDto> findRouteByEditorSeq(@Param("userSeq") int userSeq, @Param("offset") int offset, @Param("limit") int limit);
     int countRouteByEditorSeq(@Param("userSeq") int userSeq);

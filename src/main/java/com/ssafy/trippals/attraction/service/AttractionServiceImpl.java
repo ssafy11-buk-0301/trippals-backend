@@ -3,6 +3,8 @@ package com.ssafy.trippals.attraction.service;
 import com.ssafy.trippals.attraction.dao.AttractionDao;
 import com.ssafy.trippals.attraction.dto.AttractionDto;
 import com.ssafy.trippals.attraction.dto.AttractionSearchParams;
+import com.ssafy.trippals.board.dto.BoardDto;
+import com.ssafy.trippals.common.page.dto.PageParams;
 import com.ssafy.trippals.common.page.dto.PageResponse;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
@@ -36,5 +38,13 @@ public class AttractionServiceImpl implements AttractionService {
         int allContentsSize = attractionDao.countByKeyword(params);
 
         return new PageResponse<>(contents, params.getPageParams(), allContentsSize);
+    }
+
+    @Override
+    public PageResponse<BoardDto> findReview(int contentId, PageParams params) {
+        List<BoardDto> contents = attractionDao.findReviewByContentId(contentId, params.getLimit(), params.getOffset());
+        int allContentSize = attractionDao.countReviewByContentId(contentId);
+
+        return new PageResponse<>(contents, params, allContentSize);
     }
 }
