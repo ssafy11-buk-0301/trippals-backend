@@ -1,14 +1,13 @@
 package com.ssafy.trippals.user.controller;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.ssafy.trippals.SessionConst;
+import com.ssafy.trippals.common.SessionConst;
 import com.ssafy.trippals.common.exception.UserAuthException;
 import com.ssafy.trippals.common.exception.dto.ErrorCode;
 import com.ssafy.trippals.common.exception.dto.ErrorResult;
 import com.ssafy.trippals.user.dto.UserDto;
 import com.ssafy.trippals.user.service.UserService;
 import org.junit.jupiter.api.Test;
-import org.mockito.stubbing.Answer;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
 import org.springframework.boot.test.mock.mockito.MockBean;

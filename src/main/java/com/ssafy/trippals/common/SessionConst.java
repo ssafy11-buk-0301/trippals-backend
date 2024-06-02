@@ -1,4 +1,4 @@
-package com.ssafy.trippals;
+package com.ssafy.trippals.common;
 
 public interface SessionConst {
     String USER = "user";

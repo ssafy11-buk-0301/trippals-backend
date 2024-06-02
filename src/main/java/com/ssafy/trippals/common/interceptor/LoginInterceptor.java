@@ -1,6 +1,6 @@
 package com.ssafy.trippals.common.interceptor;
 
-import com.ssafy.trippals.SessionConst;
+import com.ssafy.trippals.common.SessionConst;
 import com.ssafy.trippals.common.exception.UserAuthException;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
