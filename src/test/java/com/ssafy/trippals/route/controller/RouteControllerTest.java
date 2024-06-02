@@ -1,7 +1,7 @@
 package com.ssafy.trippals.route.controller;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.ssafy.trippals.SessionConst;
+import com.ssafy.trippals.common.SessionConst;
 import com.ssafy.trippals.route.service.RouteService;
 import com.ssafy.trippals.user.dto.UserDto;
 import org.junit.jupiter.api.BeforeAll;

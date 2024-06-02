@@ -1,7 +1,7 @@
 package com.ssafy.trippals.route.controller;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.ssafy.trippals.SessionConst;
+import com.ssafy.trippals.common.SessionConst;
 import com.ssafy.trippals.common.page.dto.PageResponse;
 import com.ssafy.trippals.route.dao.RouteDao;
 import com.ssafy.trippals.route.dao.RouteEditorDao;

@@ -1,12 +1,11 @@
 package com.ssafy.trippals.route.controller;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.ssafy.trippals.SessionConst;
+import com.ssafy.trippals.common.SessionConst;
 import com.ssafy.trippals.attraction.dto.AttractionDto;
 import com.ssafy.trippals.route.service.RouteAttractionService;
 import com.ssafy.trippals.user.dto.UserDto;
 import org.junit.jupiter.api.BeforeAll;
-import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
@@ -15,10 +14,8 @@ import org.springframework.mock.web.MockHttpSession;
 import org.springframework.test.web.servlet.MockMvc;
 
 import java.math.BigDecimal;
-import java.util.ArrayList;
 import java.util.List;
 
-import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.when;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
